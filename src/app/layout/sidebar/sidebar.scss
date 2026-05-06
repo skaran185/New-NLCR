@@ -105,3 +105,116 @@ mat-divider {
   border-color: rgba(255,255,255,0.07) !important;
   margin: 4px 0;
 }
+
+/* Smooth interactions */
+.topbar {
+  transition: all 0.2s ease;
+}
+
+.toggle-btn,
+.avatar-btn,
+.topbar button {
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover,
+.topbar button:hover {
+  transform: translateY(-1px);
+}
+
+.avatar-btn:hover {
+  background: rgba(79, 70, 229, 0.08);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .topbar {
+    padding: 0 12px;
+    height: 56px;
+  }
+
+  .topbar__title {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .topbar__title {
+    font-size: 13px;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* prevents breaking */
+  }
+
+  .avatar-btn {
+    padding: 4px 6px !important;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+
+  .chevron {
+    display: none; /* cleaner on small screens */
+  }
+
+  /* Reduce icon button size slightly */
+  .topbar button[mat-icon-button] {
+    width: 36px;
+    height: 36px;
+  }
+
+  .topbar mat-icon {
+    font-size: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .topbar {
+    height: 52px;
+    padding: 0 8px;
+  }
+
+  .topbar__title {
+    font-size: 12px;
+    max-width: 100px;
+  }
+
+  .avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .topbar button[mat-icon-button] {
+    width: 34px;
+    height: 34px;
+  }
+
+  .topbar mat-icon {
+    font-size: 18px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .topbar__title {
+    display: none; /* avoid clutter */
+  }
+}

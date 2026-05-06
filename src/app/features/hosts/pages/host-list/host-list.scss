@@ -250,3 +250,166 @@ table { width: 100%; }
   border: 2px solid #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .page {
+    padding: 0 12px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .page {
+    padding: 0 10px;
+  }
+
+  /* Header stacks */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    h1 {
+      font-size: 18px;
+    }
+
+    p {
+      font-size: 12px;
+    }
+  }
+
+  .total-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  /* Toolbar stacking */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filters-bar {
+    width: 100%;
+    justify-content: space-between;
+    overflow-x: auto;
+
+    /* hide scrollbar */
+    &::-webkit-scrollbar { display: none; }
+    scrollbar-width: none;
+  }
+
+  .filter-group {
+    padding: 0 8px;
+
+    label {
+      font-size: 10px;
+    }
+
+    select {
+      font-size: 12px;
+    }
+  }
+
+  /* Table becomes scrollable */
+  .table-card {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px; /* prevents breaking layout */
+  }
+
+  .host-name {
+    font-size: 13px;
+  }
+
+  .host-sub {
+    font-size: 11px;
+  }
+
+  .text-muted {
+    font-size: 12px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .completion-cell {
+    width: 90px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 16px;
+  }
+
+  .page-header p {
+    font-size: 11px;
+  }
+
+  .total-badge {
+    font-size: 10px;
+  }
+
+  .search-box {
+    height: 36px;
+
+    input {
+      font-size: 12px;
+    }
+  }
+
+  .filter-group {
+    gap: 4px;
+
+    label {
+      font-size: 9px;
+    }
+
+    select {
+      font-size: 11px;
+    }
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+
+  .completion-pct {
+    font-size: 10px;
+  }
+
+  .empty-state {
+    padding: 32px 0;
+
+    p {
+      font-size: 12px;
+    }
+  }
+}
