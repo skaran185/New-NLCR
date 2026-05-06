@@ -1,0 +1,232 @@
+<div class="hd">
+
+    <!-- HEADER -->
+    <div class="hd-top">
+        <div class="left">
+            <div class="hd-av">
+                {{ host.fullName.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="meta">
+                <div class="hd-name">{{ host.fullName }}</div>
+                <div class="hd-sub">{{ host.businessName || 'No business' }}</div>
+
+                <div class="status-row">
+                    <span class="pill" [ngClass]="host.approvalStatus.toLowerCase()">
+                        {{ host.approvalStatus }}
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <!-- <button mat-flat-button color="primary">Approve</button>
+      <button mat-stroked-button color="warn">Reject</button> -->
+            <button mat-icon-button (click)="dialogRef.close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="hd-body">
+
+        <!-- OVERVIEW -->
+        <ng-container *ngIf="activeTab === 'overview'">
+
+            <div class="profile-progress card">
+
+                <!-- LEFT: CIRCLE -->
+                <div class="progress-left">
+                    <div class="circle" [style.--val]="host.completionPercentage">
+                        {{ host.completionPercentage }}%
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="progress-right">
+
+                    <div class="title">Profile Completion</div>
+
+                    <div class="subtitle">
+                        Complete remaining steps to activate full access
+                    </div>
+
+                    <!-- STEPS -->
+                    <div class="steps">
+
+                        <div class="step" *ngFor="let step of allSteps" [ngClass]="{
+          completed: isCompleted(step),
+          pending: isPending(step)
+        }" [matTooltip]="step">
+
+                            <!-- ICON -->
+                            <div class="icon">
+                                <mat-icon>
+                                    {{ isPending(step)
+                                    ? 'radio_button_unchecked'
+                                    : 'check_circle' }}
+                                </mat-icon>
+                            </div>
+
+                            <!-- COMPACT LABEL -->
+                            <div class="label">
+                                {{ getStepLabel(step) }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="overview-grid">
+
+                <!-- LEFT -->
+                <div class="col">
+
+                    <div class="card compact">
+                        <div class="card-title">Contact</div>
+
+                        <div class="row">
+                            <span>Email</span>
+                            <span>{{ host.email }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Mobile</span>
+                            <span>{{ host.mobileNumber }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Joined</span>
+                            <span>{{ host.createdAt | date:'dd MMM yyyy' }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Contract</span>
+                            <span class="badge danger">
+                                {{ host.isContractSigned ? 'Signed' : 'Not signed' }}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col">
+
+                    <div class="card compact">
+                        <div class="card-title">Address</div>
+
+                        <div class="row">
+                            <span>Street</span>
+                            <span>{{ host.addressLine1 }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>City</span>
+                            <span>{{ host.city }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>State</span>
+                            <span>{{ host.state?.stateName }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Country</span>
+                            <span>{{ host.country?.countryName }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="overview-grid">
+
+                <!-- LEFT -->
+                <div class="col">
+
+                    <div class="card compact">
+                        <div class="card-title">Subscription</div>
+
+                        <ng-container *ngIf="host.activeSubscription; else noSub">
+
+                            <div class="row">
+                                <span>Plan</span>
+                                <span>{{ host.activeSubscription.planName }}</span>
+                            </div>
+
+                            <div class="row">
+                                <span>Status</span>
+                                <span class="badge" [ngClass]="host.activeSubscription.status.toLowerCase()">
+                                    {{ host.activeSubscription.status }}
+                                </span>
+                            </div>
+
+                            <div class="row">
+                                <span>Max Listings</span>
+                                <span>{{ host.activeSubscription.maxVehicleListings }}</span>
+                            </div>
+
+                            <div class="row">
+                                <span>Billing End</span>
+                                <span>{{ host.activeSubscription.billingEndDate | date:'dd MMM yyyy' }}</span>
+                            </div>
+
+                        </ng-container>
+
+                        <ng-template #noSub>
+                            <div class="row">
+                                <span>Status</span>
+                                <span>No active subscription</span>
+                            </div>
+                        </ng-template>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col">
+
+                    <div class="card compact">
+                        <div class="card-title">Billing Address</div>
+
+                        <div class="row">
+                            <span>Street</span>
+                            <span>{{ host.billingAddressLine1 }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>City</span>
+                            <span>{{ host.billingCity }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Zip</span>
+                            <span>{{ host.billingZipCode }}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FULL WIDTH SMALL CARD -->
+            <div class="card compact id-proof" *ngIf="host.idProofDocumentUrl">
+                <div class="card-title">ID Proof</div>
+
+                <img [src]="host.idProofDocumentUrl" (click)="openIdProof()" />
+            </div>
+        </ng-container>
+        <!--  -->
+
+    </div>
+
+</div>

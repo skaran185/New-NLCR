@@ -1,0 +1,93 @@
+<div class="action-dialog">
+
+    <!-- Header -->
+    <div class="dialog-head">
+        <div class="host-info">
+            <div class="avatar">
+                {{ data.host.fullName.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+                <div class="host-name">{{ data.host.fullName }}</div>
+                <div class="host-biz">
+                    {{ data.host.businessName || 'No business name' }}
+                </div>
+            </div>
+        </div>
+
+        <button mat-icon-button (click)="dialogRef.close(false)" class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Current Status -->
+    <div class="current-status">
+        <span class="cs-label">Current status</span>
+        <span class="badge badge--{{ data.host.approvalStatus.toLowerCase() }}">
+            {{ data.host.approvalStatus }}
+        </span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Status Picker -->
+    <div class="picker-section">
+        <p class="picker-label">Change approval status to</p>
+
+        <!-- Loading -->
+        <div class="loading-row" *ngIf="loading">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Loading statuses…</span>
+        </div>
+
+        <!-- Status Options -->
+        <div class="status-options" *ngIf="!loading">
+
+            <label *ngFor="let s of statuses" class="status-option" [ngClass]="{
+          selected: selectedStatusId === s.id,
+          'opt--approved': s.code === 'APPROVED',
+          'opt--rejected': s.code === 'REJECTED',
+          'opt--pending': s.code === 'PENDING'
+        }" (click)="selectedStatusId = s.id">
+                <span class="option-dot"></span>
+
+                <span class="option-label">
+                    {{ s.name }}
+                </span>
+
+                <mat-icon class="check-icon" *ngIf="selectedStatusId === s.id">
+                    check
+                </mat-icon>
+            </label>
+
+            <!-- Empty State -->
+            <div class="empty-statuses" *ngIf="statuses.length === 0">
+                No other statuses available.
+            </div>
+
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Optional Remarks (Recommended UX) -->
+    <div class="remarks-section">
+        <span class="remarks-label">Remarks (optional)</span>
+        <textarea [(ngModel)]="remarks" placeholder="Add reason for approval/rejection"></textarea>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+        <button mat-stroked-button (click)="dialogRef.close(false)" [disabled]="submitting">
+            Cancel
+        </button>
+
+        <button mat-flat-button color="primary" (click)="confirm()"
+            [disabled]="!selectedStatusId || submitting || loading">
+            <mat-spinner diameter="16" *ngIf="submitting"></mat-spinner>
+            <span *ngIf="!submitting">Update Status</span>
+        </button>
+    </div>
+
+</div>

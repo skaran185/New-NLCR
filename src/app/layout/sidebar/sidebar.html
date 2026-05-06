@@ -1,0 +1,34 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+  <!-- Logo -->
+  <div class="sidebar__logo">
+    <div class="logo-mark">N</div>
+    <span class="logo-text" *ngIf="!collapsed">nexo</span>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Nav -->
+  <nav class="sidebar__nav">
+    <ng-container *ngFor="let group of navGroups">
+      <div class="nav-group-label" *ngIf="group.title && !collapsed">
+        {{ group.title }}
+      </div>
+
+      <a
+        *ngFor="let item of group.items"
+        class="nav-item"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [matTooltip]="collapsed ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+      </a>
+
+      <mat-divider *ngIf="group.title"></mat-divider>
+    </ng-container>
+  </nav>
+
+</aside>

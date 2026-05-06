@@ -1,0 +1,149 @@
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Hosts</h1>
+            <p>Manage and approve host accounts</p>
+        </div>
+        <span class="total-badge" *ngIf="pagination">{{ pagination.totalRecords }} total hosts</span>
+    </div>
+
+    <!-- Toolbar: Search + Filters -->
+    <div class="toolbar">
+
+        <!-- Search -->
+        <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input type="text" placeholder="Search by name, email or business…" [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange($event)" />
+            <button mat-icon-button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm = ''; onSearchChange('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <!-- Compact Filters -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label>Approval</label>
+                <select [(ngModel)]="filter.approvalStatus" (ngModelChange)="onFilterChange()">
+                    <option *ngFor="let o of approvalOptions" [value]="o">{{ o }}</option>
+                </select>
+            </div>
+            <div class="filter-sep"></div>
+            <div class="filter-group">
+                <label>ID Proof</label>
+                <select [(ngModel)]="filter.idProofStatus" (ngModelChange)="onFilterChange()">
+                    <option *ngFor="let o of idProofOptions" [value]="o">{{ o }}</option>
+                </select>
+            </div>
+            <div class="filter-sep"></div>
+            <div class="filter-group">
+                <label>Sort</label>
+                <select [(ngModel)]="filter.sortBy" (ngModelChange)="onFilterChange()">
+                    <option *ngFor="let o of sortOptions" [value]="o.value">{{ o.label }}</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+
+        <div class="loading-overlay" *ngIf="loading">
+            <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <table mat-table [dataSource]="hosts">
+
+            <ng-container matColumnDef="fullName">
+                <th mat-header-cell *matHeaderCellDef>Host</th>
+                <td mat-cell *matCellDef="let h">
+                    <div class="host-cell">
+                        <div class="avatar">
+                            <img *ngIf="h.profileImageUrl; else fallback" [src]="h.profileImageUrl" alt="Profile"
+                                (error)="onImgError($event)" />
+
+                            <ng-template #fallback>
+                                <span>{{ h.fullName?.charAt(0)?.toUpperCase() }}</span>
+                            </ng-template>
+                        </div>
+                        <div>
+                            <div class="host-name">{{ h.fullName }}</div>
+                            <div class="host-sub">{{ h.businessEmail || '—' }}</div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="businessName">
+                <th mat-header-cell *matHeaderCellDef>Business</th>
+                <td mat-cell *matCellDef="let h">
+                    <span class="text-muted">{{ h.businessName || '—' }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="approvalStatus">
+                <th mat-header-cell *matHeaderCellDef>Approval</th>
+                <td mat-cell *matCellDef="let h">
+                    <span class="badge badge--{{ h.approvalStatus | lowercase }}">{{ h.approvalStatus }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="idProofStatus">
+                <th mat-header-cell *matHeaderCellDef>ID Proof</th>
+                <td mat-cell *matCellDef="let h">
+                    <span class="badge badge--{{ h.idProofStatus | lowercase }}">{{ h.idProofStatus }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="completion">
+                <th mat-header-cell *matHeaderCellDef>Profile</th>
+                <td mat-cell *matCellDef="let h">
+                    <div class="completion-cell">
+                        <mat-progress-bar mode="determinate" [value]="h.completionPercentage"></mat-progress-bar>
+                        <span class="completion-pct">{{ h.completionPercentage }}%</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Joined</th>
+                <td mat-cell *matCellDef="let h">
+                    <span class="text-muted">{{ h.createdAt | date:'dd MMM yyyy' }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let h">
+                    <div class="actions">
+                        <button mat-icon-button matTooltip="View details" (click)="openView(h)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Change status" (click)="openAction(h)">
+                            <mat-icon>manage_accounts</mat-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;" class="table-row"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td [attr.colspan]="columns.length" class="empty-state">
+                    <mat-icon>group_off</mat-icon>
+                    <p>No hosts found</p>
+                </td>
+            </tr>
+
+        </table>
+
+        <mat-paginator *ngIf="pagination" [length]="pagination.totalRecords" [pageSize]="filter.pageSize"
+            [pageIndex]="filter.pageNumber - 1" [pageSizeOptions]="[10, 25, 50]" (page)="onPageChange($event)"
+            showFirstLastButtons>
+        </mat-paginator>
+
+    </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="panel-container">
+  <!-- Empty state: no type selected -->
+  <div *ngIf="!selectedType" class="empty-state">
+    <div class="empty-icon">
+      <mat-icon>touch_app</mat-icon>
+    </div>
+    <h3>Select a Lookup Type</h3>
+    <p>Choose a lookup type from the left panel to view and manage its values.</p>
+  </div>
+
+  <!-- Content: type selected -->
+  <ng-container *ngIf="selectedType">
+    <!-- Panel Header -->
+    <div class="panel-header">
+      <div class="header-left">
+        <div class="type-badge">
+          <mat-icon>category</mat-icon>
+          {{ selectedType.code }}
+        </div>
+        <div class="header-titles">
+          <h2>{{ selectedType.name }}</h2>
+          <span class="value-count">{{ values.length }} values total</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search values</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filter()" />
+          <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="refresh.emit()" matTooltip="Refresh" class="refresh-btn">
+          <mat-icon>refresh</mat-icon>
+        </button>
+
+        <button mat-raised-button color="primary" (click)="addValue.emit()" class="add-btn">
+          <mat-icon>add</mat-icon>
+          Add Value
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="spinner-wrap">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Fetching values...</span>
+    </div>
+
+
+    <!-- List View (default, only view) -->
+    <div *ngIf="!loading" class="values-list">
+      <div class="list-header-row">
+        <span>Name</span>
+        <span>Code</span>
+        <span>ID</span>
+        <span>Actions</span>
+      </div>
+      <div class="list-row" *ngFor="let val of filteredValues">
+        <span class="list-name">{{ val.name }}</span>
+        <span class="list-code">{{ val.code }}</span>
+        <span class="list-id" [matTooltip]="val.id">{{ val.id | slice:0:12 }}...</span>
+        <span class="list-actions">
+          <button mat-icon-button (click)="viewValue.emit(val)" matTooltip="View">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="editValue.emit(val)" matTooltip="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteValue.emit(val)" matTooltip="Delete" color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
+      </div>
+
+      <div *ngIf="filteredValues.length === 0" class="no-values">
+        <mat-icon>search_off</mat-icon>
+        <span>No values found</span>
+      </div>
+    </div>
+  </ng-container>
+</div>

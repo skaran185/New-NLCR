@@ -1,0 +1,45 @@
+<div class="types-list-container">
+  <div class="list-header">
+    <h3 class="list-title">
+      <mat-icon>category</mat-icon>
+      Lookup Types
+    </h3>
+    <span class="type-count">{{ types.length }} types</span>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search types...</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filter()" placeholder="Name or code" />
+    <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="clearSearch()" matTooltip="Clear search">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div *ngIf="loading" class="spinner-wrap">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span>Loading types...</span>
+  </div>
+
+  <mat-nav-list *ngIf="!loading" class="type-nav-list">
+    <mat-list-item
+      *ngFor="let type of filteredTypes"
+      (click)="select(type)"
+      [class.active]="type.code === selectedTypeCode"
+      class="type-item"
+    >
+      <div class="item-content">
+        <div class="item-main">
+          <span class="item-name">{{ type.name }}</span>
+          <span class="item-code">{{ type.code }}</span>
+        </div>
+        <mat-icon class="chevron-icon">chevron_right</mat-icon>
+      </div>
+    </mat-list-item>
+
+    <div *ngIf="filteredTypes.length === 0" class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <span>No types found</span>
+    </div>
+  </mat-nav-list>
+</div>

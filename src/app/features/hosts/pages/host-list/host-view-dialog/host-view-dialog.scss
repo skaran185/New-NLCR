@@ -1,0 +1,281 @@
+/* ================= ROOT ================= */
+.hd {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+}
+
+/* ================= HEADER ================= */
+.hd-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* LEFT */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hd-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.meta {
+  min-width: 0;
+}
+
+.hd-name {
+  font-weight: 600;
+  max-width: 200px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hd-sub {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* STATUS */
+.status-row {
+  margin-top: 4px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  background: #fff;
+  color: #333;
+
+  &.approved { background: #22c55e; color: #fff; }
+  &.pending { background: #f59e0b; color: #fff; }
+  &.rejected { background: #ef4444; color: #fff; }
+
+  &.light {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions button[mat-icon-button] {
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+}
+
+.actions button[mat-icon-button] mat-icon {
+  color: #fff !important;
+}
+
+/* ================= BODY ================= */
+.hd-body {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+/* ================= PROFILE PROGRESS ================= */
+.profile-progress {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+}
+
+/* LEFT */
+.progress-left {
+  flex-shrink: 0;
+}
+
+/* CIRCLE (FIXED + CONSISTENT COLOR) */
+.circle {
+  width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: conic-gradient(#65d04d calc(var(--val, 0) * 1%), #a7beec 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+}
+
+/* RIGHT */
+.progress-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+/* ================= STEPS ================= */
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* CHIP */
+.step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #f3f4f6;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ICON FIX */
+.step .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+/* COMPLETED (MATCH PURPLE THEME) */
+.step.completed {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* PENDING */
+.step.pending {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+/* ================= GRID ================= */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ================= ROW ================= */
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #eee;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row span:last-child {
+  font-weight: 500;
+  color: #111827;
+  text-align: right;
+}
+
+/* ================= BADGE ================= */
+.badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+
+.badge.danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ================= IMAGE ================= */
+.id-proof img {
+  width: 100%;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-progress {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

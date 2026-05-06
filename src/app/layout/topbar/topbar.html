@@ -1,0 +1,35 @@
+<header class="topbar">
+
+  <button mat-icon-button (click)="toggleSidebar.emit()" class="toggle-btn" matTooltip="Toggle sidebar">
+    <mat-icon>{{ sidebarCollapsed ? 'menu_open' : 'menu' }}</mat-icon>
+  </button>
+
+  <!-- Page title via router -->
+  <span class="topbar__title">
+    <ng-content></ng-content>
+  </span>
+
+  <div class="topbar__spacer"></div>
+
+  <!-- Actions -->
+  <button mat-icon-button matTooltip="Notifications">
+    <mat-icon>notifications_none</mat-icon>
+  </button>
+
+  <!-- Avatar menu -->
+  <button mat-button [matMenuTriggerFor]="userMenu" class="avatar-btn">
+    <div class="avatar">A</div>
+    <mat-icon class="chevron">expand_more</mat-icon>
+  </button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item routerLink="/settings">
+      <mat-icon>manage_accounts</mat-icon> Profile
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon> Sign out
+    </button>
+  </mat-menu>
+
+</header>

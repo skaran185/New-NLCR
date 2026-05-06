@@ -1,0 +1,82 @@
+<div class="dialog-wrapper">
+      <!-- Header -->
+      <div class="dialog-header" [class]="mode">
+        <div class="header-icon">
+          <mat-icon>{{ modeIcon }}</mat-icon>
+        </div>
+        <div>
+          <h2>{{ modeTitle }}</h2>
+          <p *ngIf="data.typeName">for <strong>{{ data.typeName }}</strong></p>
+        </div>
+        <button mat-icon-button mat-dialog-close class="close-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+ 
+      <mat-divider></mat-divider>
+ 
+      <!-- Delete confirmation -->
+      <ng-container *ngIf="mode === 'delete'">
+        <div class="dialog-body">
+          <p class="delete-msg">
+            Are you sure you want to delete <strong>{{ data.value?.name }}</strong>
+            (<code>{{ data.value?.code }}</code>)? This action cannot be undone.
+          </p>
+        </div>
+        <div class="dialog-actions">
+          <button mat-stroked-button mat-dialog-close>Cancel</button>
+          <button mat-raised-button color="warn" [mat-dialog-close]="true">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </div>
+      </ng-container>
+ 
+      <!-- View -->
+      <ng-container *ngIf="mode === 'view'">
+        <div class="dialog-body view-body">
+          <div class="field-row">
+            <span class="field-label">Name</span>
+            <span class="field-value">{{ data.value?.name }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Code</span>
+            <code class="field-code">{{ data.value?.code }}</code>
+          </div>
+          <div class="field-row">
+            <span class="field-label">ID</span>
+            <code class="field-id">{{ data.value?.id }}</code>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button mat-raised-button color="primary" mat-dialog-close>Close</button>
+        </div>
+      </ng-container>
+ 
+      <!-- Add / Edit form -->
+      <ng-container *ngIf="mode === 'add' || mode === 'edit'">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="dialog-body">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g. Active" />
+              <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+            </mat-form-field>
+ 
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Code</mat-label>
+              <input matInput formControlName="code" placeholder="e.g. ACTIVE"/>
+              <mat-hint>Use UPPER_SNAKE_CASE</mat-hint>
+              <mat-error *ngIf="form.get('code')?.hasError('required')">Code is required</mat-error>
+              <mat-error *ngIf="form.get('code')?.hasError('pattern')">Use only uppercase letters and underscores</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="dialog-actions">
+            <button type="button" mat-stroked-button mat-dialog-close>Cancel</button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">
+              <mat-icon>{{ mode === 'add' ? 'add' : 'save' }}</mat-icon>
+              {{ mode === 'add' ? 'Add Value' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </div>

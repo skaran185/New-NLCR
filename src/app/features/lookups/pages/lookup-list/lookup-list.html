@@ -1,0 +1,49 @@
+<div class="lookup-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-info">
+      <h1>
+        <span class="header-icon">⚙️</span>
+        Lookup Management
+      </h1>
+      <p>Manage lookup types and their corresponding values across the platform.</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-chip">
+        <span class="stat-number">{{ types.length }}</span>
+        <span class="stat-label">Types</span>
+      </div>
+      <div class="stat-chip accent">
+        <span class="stat-number">{{ values.length }}</span>
+        <span class="stat-label">Values</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Split Layout -->
+  <div class="split-layout">
+    <!-- Left: Types List -->
+    <div class="types-pane">
+      <app-lookup-types-list
+        [types]="types"
+        [loading]="typesLoading"
+        [selectedTypeCode]="selectedType?.code ?? null"
+        (typeSelected)="onTypeSelected($event)"
+      ></app-lookup-types-list>
+    </div>
+
+    <!-- Right: Values Panel -->
+    <div class="values-pane">
+      <app-lookup-values-panel
+        [selectedType]="selectedType"
+        [values]="values"
+        [loading]="valuesLoading"
+        (addValue)="onAddValue()"
+        (editValue)="onEditValue($event)"
+        (deleteValue)="onDeleteValue($event)"
+        (viewValue)="onViewValue($event)"
+        (refresh)="onRefresh()"
+      ></app-lookup-values-panel>
+    </div>
+  </div>
+</div>

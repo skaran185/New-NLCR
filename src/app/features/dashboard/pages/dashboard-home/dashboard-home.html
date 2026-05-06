@@ -1,0 +1,50 @@
+<div class="dashboard">
+
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Welcome back, Admin</p>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card" *ngFor="let s of stats">
+      <div class="stat-card__icon" [style.background]="s.color + '18'" [style.color]="s.color">
+        <mat-icon>{{ s.icon }}</mat-icon>
+      </div>
+      <div>
+        <div class="stat-card__value">{{ s.value }}</div>
+        <div class="stat-card__label">{{ s.label }}</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Placeholder content area -->
+  <div class="content-grid">
+    <mat-card class="content-card">
+      <mat-card-header>
+        <mat-card-title>Recent Bookings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="empty-state">No bookings yet.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="content-card">
+      <mat-card-header>
+        <mat-card-title>Quick Actions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="quick-actions">
+        <button mat-stroked-button routerLink="/users">
+          <mat-icon>person_add</mat-icon> Add User
+        </button>
+        <button mat-stroked-button routerLink="/vehicles">
+          <mat-icon>add_circle_outline</mat-icon> Add Vehicle
+        </button>
+        <button mat-stroked-button routerLink="/reports">
+          <mat-icon>bar_chart</mat-icon> View Reports
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

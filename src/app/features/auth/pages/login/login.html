@@ -1,0 +1,127 @@
+<div class="login-shell">
+
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <div class="panel-noise"></div>
+    <div class="panel-lines"></div>
+
+    <div class="panel-content">
+      <div class="panel-logo">
+        <div class="logo-mark">N</div>
+        <span class="logo-label">nexo</span>
+      </div>
+
+      <div class="panel-headline">
+        <h2>One platform,<br>zero limits.</h2>
+        <p>Manage host/users, analytics, and system configuration from a single unified interface.</p>
+      </div>
+
+      <!-- <div class="panel-stats">
+        <div class="stat">
+          <span class="stat-num">99.9%</span>
+          <span class="stat-label">Uptime SLA</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">2ms</span>
+          <span class="stat-label">Avg response</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">256-bit</span>
+          <span class="stat-label">Encryption</span>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Decorative orbiting rings -->
+    <div class="ring ring-1"></div>
+    <div class="ring ring-2"></div>
+    <div class="orbit-dot dot-1"></div>
+    <div class="orbit-dot dot-2"></div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="form-wrapper">
+
+      <!-- Mobile logo (only shows on small screens) -->
+      <div class="mobile-brand">
+        <div class="logo-mark small">N</div>
+        <span>nexo <span class="admin-badge">admin</span></span>
+      </div>
+
+      <div class="form-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to your admin panel</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+
+        <!-- Email -->
+        <div class="field-group">
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Email address</mat-label>
+            <mat-icon matPrefix class="field-icon">mail_outline</mat-icon>
+            <input
+              matInput
+              formControlName="email"
+              type="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+            />
+            <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix class="field-icon">lock_outline</mat-icon>
+            <input
+              matInput
+              formControlName="password"
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [matTooltip]="hidePassword ? 'Show password' : 'Hide password'"
+              tabindex="-1"
+              class="toggle-btn"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('minlength')">Minimum 6 characters required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Submit -->
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          [disabled]="form.invalid"
+        >
+          <span class="btn-text">Sign in</span>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+        </button>
+
+      </form>
+
+      <p class="form-footer">
+        Secure admin access &mdash; unauthorized use is prohibited.
+      </p>
+
+    </div>
+  </div>
+
+</div>

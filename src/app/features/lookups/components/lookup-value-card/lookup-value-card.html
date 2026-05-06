@@ -1,0 +1,13 @@
+<mat-card class="value-card">
+  <mat-card-title>{{ value.name }}</mat-card-title>
+  <mat-card-subtitle>{{ value.code }}</mat-card-subtitle>
+
+  <mat-card-actions align="end">
+    <button mat-icon-button (click)="edit.emit(value)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="delete.emit(value)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>
