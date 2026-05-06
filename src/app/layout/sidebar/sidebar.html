@@ -11,6 +11,7 @@
   <!-- Nav -->
   <nav class="sidebar__nav">
     <ng-container *ngFor="let group of navGroups">
+
       <div class="nav-group-label" *ngIf="group.title && !collapsed">
         {{ group.title }}
       </div>
@@ -22,12 +23,16 @@
         routerLinkActive="active"
         [matTooltip]="collapsed ? item.label : ''"
         matTooltipPosition="right"
+        (click)="isMobile && closeSidebar.emit()"
       >
         <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-        <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+        <span class="nav-label" *ngIf="!collapsed">
+          {{ item.label }}
+        </span>
       </a>
 
       <mat-divider *ngIf="group.title"></mat-divider>
+
     </ng-container>
   </nav>
 

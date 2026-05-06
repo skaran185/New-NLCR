@@ -2,6 +2,8 @@
 
   <app-sidebar
     [collapsed]="sidebarCollapsed"
+    [isMobile]="isMobile"
+    (closeSidebar)="sidebarCollapsed = true"
     class="shell__sidebar">
   </app-sidebar>
 
@@ -14,6 +16,13 @@
     <main class="shell__content">
       <router-outlet></router-outlet>
     </main>
+  </div>
+
+  <!-- Mobile backdrop -->
+  <div 
+    class="backdrop"
+    *ngIf="isMobile && !sidebarCollapsed"
+    (click)="sidebarCollapsed = true">
   </div>
 
 </div>

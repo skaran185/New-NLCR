@@ -14,8 +14,11 @@ export class TopbarComponent {
  
   constructor(private auth: AuthService, private router: Router) {}
  
-  logout() {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
+ logout() {
+  this.auth.logout(); // MUST remove token
+
+  localStorage.clear(); // safer for now (or remove token only)
+
+  this.router.navigate(['/login'], { replaceUrl: true });
+}
 }
