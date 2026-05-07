@@ -66,7 +66,7 @@ export class LookupList {
   openDialog(data: any): void {
     const ref = this.dialog.open(LookupDialogComponent, {
       data,
-      width: '480px',
+      width: 'min(480px, 95vw)',
       panelClass: 'lookup-dialog-panel'
     });
     ref.afterClosed().subscribe(result => {

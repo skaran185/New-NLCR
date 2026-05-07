@@ -37,4 +37,9 @@
       display: flex; justify-content: flex-end; gap: 8px;
       padding: 12px 20px 20px; border-top: 1px solid #f0f0f0;
       button { border-radius: 8px !important; }
-    }
+    }// The min-width: 420px is the culprit on small screens
+.dialog-wrapper {
+  min-width: min(420px, calc(100vw - 48px)); // respects viewport
+  width: 100%;
+  box-sizing: border-box;
+}

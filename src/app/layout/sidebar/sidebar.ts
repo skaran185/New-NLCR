@@ -32,20 +32,20 @@ export class SidebarComponent {
     {
       title: 'Management',
       items: [
-        { label: 'Hosts', icon: 'home', route: '/hosts' },
+        { label: 'Hosts', icon: 'people', route: '/hosts' },
         // { label: 'Users',         icon: 'people',           route: '/users' },
         // { label: 'Vehicles',      icon: 'directions_car',   route: '/vehicles' },
         // { label: 'Bookings',      icon: 'calendar_month',   route: '/bookings' },
-        // { label: 'Subscriptions', icon: 'subscriptions',    route: '/subscriptions' },
+        { label: 'Subscriptions', icon: 'subscriptions',    route: '/subscriptions' },
       ]
     },
-    // {
-    //   title: 'System',
-    //   items: [
-    //     { label: 'Lookups',   icon: 'tune',          route: '/lookups' },
-    //     { label: 'Reports',   icon: 'bar_chart',     route: '/reports' },
-    //     { label: 'Settings',  icon: 'settings',      route: '/settings' },
-    //   ]
-    // }
+    {
+      title: 'System',
+      items: [
+        { label: 'Lookups',   icon: 'tune',          route: '/lookups' },
+        // { label: 'Reports',   icon: 'bar_chart',     route: '/reports' },
+        // { label: 'Settings',  icon: 'settings',      route: '/settings' },
+      ]
+    }
   ];
 }

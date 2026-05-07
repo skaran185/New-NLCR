@@ -256,4 +256,103 @@
   grid-column: 1 / -1;
 
   mat-icon { font-size: 36px; }
+}.panel-header {
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+    min-height: unset;
+  }
+}
+
+.header-left {
+  @media (max-width: 640px) {
+    width: 100%;
+  }
+}
+
+.header-actions {
+  @media (max-width: 640px) {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+.search-field {
+  @media (max-width: 640px) {
+    flex: 1;
+    width: auto; // override the fixed 170px
+  }
+}
+
+// List table: collapse ID column on mobile, hide it entirely on very small screens
+.list-header-row,
+.list-row {
+  @media (max-width: 600px) {
+    grid-template-columns: 2fr 1.4fr 90px; // drop ID column
+  }
+  @media (max-width: 600px) {
+    .list-id-col { display: none; } // hide ID column header
+  }
+}
+
+.list-id {
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+// Shrink action buttons slightly
+.list-actions {
+  @media (max-width: 480px) {
+    button {
+      width: 26px !important;
+      height: 26px !important;
+    }
+  }
+}// Fix column order to match screenshot: Code | Name | Actions (ID hidden on mobile)
+.list-header-row,
+.list-row {
+  grid-template-columns: 1.2fr 2fr 90px; // Code | Name | Actions
+
+  @media (min-width: 601px) {
+    grid-template-columns: 1.4fr 2fr 2fr 120px; // Code | Name | ID | Actions
+  }
+}.panel-header {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+}
+
+.header-left {
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.header-actions {
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .search-field {
+      flex: 1;
+      width: auto !important;
+    }
+
+    .refresh-btn {
+      flex-shrink: 0;
+    }
+
+    .add-btn {
+      flex-shrink: 0;
+      margin-left: auto; // push to right
+    }
+  }
 }

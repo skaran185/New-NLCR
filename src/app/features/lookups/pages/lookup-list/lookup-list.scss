@@ -95,4 +95,77 @@
   }
 
   .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+}.lookup-page {
+  padding: 12px;
+}
+
+.page-header {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 14px 16px;
+  }
+}
+
+.header-stats {
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.split-layout {
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 260px 1fr;
+    overflow: visible; // allow both panes to participate in page scroll
+  }
+}
+
+// On mobile, the outer .lookup-page should scroll instead of clipping
+@media (max-width: 768px) {
+  .lookup-page {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+
+  .split-layout {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .types-pane {
+    height: 260px;
+    overflow: hidden;
+  }
+
+  .values-pane {
+    min-height: 400px;
+    overflow: hidden;
+  }
+}.search-field {
+  width: calc(100% - 16px);
+  box-sizing: border-box; // add this
+}.header-stats {
+  @media (max-width: 768px) {
+    width: 100%;
+    
+    .stat-chip {
+      flex: 1; // each chip takes equal width
+    }
+  }
+}.type-nav-list {
+  overflow-x: hidden;
+  overflow-y: auto; // keep only this
+}
+
+.type-item {
+  // Reduce right margin so chevron isn't clipped
+  margin: 1px 4px 1px 6px;
+}
+
+.item-content {
+  padding: 7px 8px 7px 10px; // reduce right padding slightly
 }

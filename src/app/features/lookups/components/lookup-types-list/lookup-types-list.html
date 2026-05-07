@@ -22,18 +22,18 @@
   </div>
 
   <mat-nav-list *ngIf="!loading" class="type-nav-list">
-    <mat-list-item
-      *ngFor="let type of filteredTypes"
-      (click)="select(type)"
-      [class.active]="type.code === selectedTypeCode"
-      class="type-item"
-    >
+    <mat-list-item *ngFor="let type of filteredTypes" (click)="select(type)"
+      [class.active]="type.code === selectedTypeCode" class="type-item">
       <div class="item-content">
+        <div class="active-dot"></div>
         <div class="item-main">
           <span class="item-name">{{ type.name }}</span>
           <span class="item-code">{{ type.code }}</span>
         </div>
-        <mat-icon class="chevron-icon">chevron_right</mat-icon>
+        <div class="item-right">
+          <!-- <span class="item-count">{{ type.valueCount ?? '' }}</span> -->
+          <mat-icon class="chevron-icon">chevron_right</mat-icon>
+        </div>
       </div>
     </mat-list-item>
 
