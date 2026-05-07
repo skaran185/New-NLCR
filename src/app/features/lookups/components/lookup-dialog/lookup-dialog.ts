@@ -38,13 +38,14 @@ export class LookupDialogComponent {
 
     this.form = this.fb.group({
       name: [data.value?.name || '', Validators.required],
-      code: [data.value?.code || '', [Validators.required, Validators.pattern(/^[A-Z_]+$/)]]
+      code: [{ value: data.value?.code || '', disabled: this.mode === 'edit' },
+      [Validators.required, Validators.pattern(/^[A-Z_]+$/)]]
     });
   }
 
   submit(): void {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+      this.dialogRef.close(this.form.getRawValue());
     }
   }
 }
