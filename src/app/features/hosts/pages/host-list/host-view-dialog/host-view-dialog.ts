@@ -1,6 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Host } from '../../../host.model';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { HostsService } from '../../../services/hosts';
+import { IdProofViewerSheetComponent } from '../id-proof-viewer-sheet.component/id-proof-viewer-sheet.component';
 
 @Component({
   selector: 'app-host-view-dialog',
@@ -11,7 +14,9 @@ import { Host } from '../../../host.model';
 export class HostViewDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<HostViewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public host: Host
+    @Inject(MAT_DIALOG_DATA) public host: Host,
+    private bottomSheet: MatBottomSheet,
+    private hostservice: HostsService
   ) { }
 
   activeTab: 'overview' | 'subscription' | 'billing' | 'completion' = 'overview';
@@ -52,6 +57,19 @@ export class HostViewDialogComponent {
     if (this.host.idProofDocumentUrl) {
       window.open(this.host.idProofDocumentUrl, '_blank');
     }
+  }
+
+  viewDocument(fileUrl: string) {
+    this.hostservice.getFileFromUrl(fileUrl).subscribe(actualUrl => {
+
+      this.bottomSheet.open(IdProofViewerSheetComponent, {
+        data: {
+          url: actualUrl
+        },
+        panelClass: 'full-bottom-sheet'
+      });
+
+    });
   }
 
   // component .ts

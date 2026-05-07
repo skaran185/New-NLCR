@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { HostsFilter, HostsResponse, LookupItem, LookupResponse } from '../host.model';
-import { tap } from 'rxjs/operators';
+import { ApiResponse, HostsFilter, HostsResponse, LookupItem, LookupResponse, ReadUrlResponse } from '../host.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class HostsService {
@@ -38,5 +38,18 @@ export class HostsService {
 
   updateApprovalStatus(hostId: string, statusId: string, remarks: string): Observable<any> {
     return this.http.put(`${this.base}/${hostId}/approval`, { statusId, remarks });
+  }
+
+  getFileFromUrl(fileUrl: string): Observable<string> {
+    const params = new HttpParams().set('fileUrl', fileUrl);
+
+    return this.http
+      .get<ApiResponse<ReadUrlResponse>>(
+        `${environment.apiUrl}/storage/read-url`,
+        { params }
+      )
+      .pipe(
+        map(res => res?.data?.readUrl) // 👈 FINAL URL
+      );
   }
 }

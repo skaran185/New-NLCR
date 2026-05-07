@@ -222,7 +222,9 @@
             <div class="card compact id-proof" *ngIf="host.idProofDocumentUrl">
                 <div class="card-title">ID Proof</div>
 
-                <img [src]="host.idProofDocumentUrl" (click)="openIdProof()" />
+                <button mat-flat-button color="primary" (click)="viewDocument(host.idProofDocumentUrl)">
+                    View Document
+                </button>
             </div>
         </ng-container>
         <!--  -->

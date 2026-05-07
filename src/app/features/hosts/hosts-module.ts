@@ -21,6 +21,8 @@ import { HostsListComponent } from './pages/host-list/host-list';
 import { HostDetailComponent } from './pages/host-detail/host-detail';
 import { HostApproveDialogComponent } from './pages/host-list/host-approve-dialog/host-approve-dialog';
 import { HostViewDialogComponent } from './pages/host-list/host-view-dialog/host-view-dialog';
+import { IdProofViewerSheetComponent } from './pages/host-list/id-proof-viewer-sheet.component/id-proof-viewer-sheet.component';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { HostViewDialogComponent } from './pages/host-list/host-view-dialog/host
     HostDetailComponent,
     HostApproveDialogComponent,
     HostViewDialogComponent,
+    IdProofViewerSheetComponent,
   ],
   imports: [
     CommonModule,
@@ -46,6 +49,7 @@ import { HostViewDialogComponent } from './pages/host-list/host-view-dialog/host
     MatDividerModule,
     MatCardModule,
     MatChipsModule,
-  ]
+    MatBottomSheetModule
+  ],
 })
 export class HostsModule {}

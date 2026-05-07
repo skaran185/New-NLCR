@@ -1,0 +1,40 @@
+<div class="sheet-container">
+
+  <!-- HEADER -->
+  <div class="sheet-header">
+    <div class="title">Document Viewer</div>
+
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader" *ngIf="loading">
+    <mat-spinner diameter="35"></mat-spinner>
+    <span>Loading...</span>
+  </div>
+
+  <!-- IMAGE -->
+  <div class="content" *ngIf="isImage()">
+    <img
+      [src]="data.url"
+      (load)="onLoad()"
+      (error)="loading = false"
+    />
+  </div>
+
+  <!-- PDF -->
+  <div class="content" *ngIf="isPdf()">
+    <iframe
+      [src]="data.url"
+      (load)="onLoad()"
+    ></iframe>
+  </div>
+
+  <!-- FALLBACK -->
+  <div class="fallback" *ngIf="!isImage() && !isPdf()">
+    Unsupported file format
+  </div>
+
+</div>

@@ -93,4 +93,13 @@ export interface LookupResponse {
   success: boolean;
   data: LookupItem[];
   errors: null | any;
+}export interface ReadUrlResponse {
+  readUrl: string;
+  expiresInMinutes: number;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
 }
