@@ -1,0 +1,373 @@
+// ── Brand tokens ──────────────────────────────────────────────────────────────
+$primary:       #0F0F0F;
+$accent:        #CBA135;
+$accent-light:  #f5e9c8;
+$success:       #1e7e34;
+$warn:          #b05e00;
+$surface:       #ffffff;
+$surface-2:     #f8f8f8;
+$border:        #e5e5e5;
+$text:          #0F0F0F;
+$text-sec:      #6b6b6b;
+$text-ter:      #a0a0a0;
+$radius:        8px;
+
+// ── Page shell ────────────────────────────────────────────────────────────────
+.vl-page {
+  padding: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.vl-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.vl-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: $text;
+}
+
+.vl-subtitle {
+  font-size: 13px;
+  color: $text-sec;
+  margin: 2px 0 0;
+}
+
+.export-btn {
+  background: $accent !important;
+  color: $primary !important;
+  mat-icon { margin-right: 4px; font-size: 18px; }
+}
+
+// ── Stats row ─────────────────────────────────────────────────────────────────
+.vl-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  &.accent-border { border-left: 3px solid $accent !important; }
+
+  mat-card-content { padding: 14px 16px !important; }
+
+  .stat-label {
+    font-size: 12px;
+    color: $text-sec;
+    margin: 0 0 4px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: $text;
+    &.success { color: $success; }
+    &.warn    { color: $warn; }
+    &.muted   { color: $text-sec; }
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: $text-ter;
+    margin: 2px 0 0;
+  }
+}
+
+// ── Filter card ───────────────────────────────────────────────────────────────
+.filter-card {
+  mat-card-content { padding: 16px !important; }
+}
+
+.filter-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.filter-search {
+  flex: 2;
+  min-width: 220px;
+}
+
+.filter-select {
+  flex: 1;
+  min-width: 160px;
+}
+
+.reset-btn {
+  height: 56px;    // matches outline form-field height
+  align-self: flex-start;
+  margin-top: 0;
+}
+
+// Active chips
+.chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.chip-label {
+  font-size: 12px;
+  color: $text-sec;
+}
+
+.filter-chip {
+  background: $accent-light !important;
+  color: #7a5e10 !important;
+  font-size: 12px !important;
+
+  mat-icon { color: #a07820 !important; }
+}
+
+// ── Table card ────────────────────────────────────────────────────────────────
+.table-card {
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid $border;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.result-count {
+  font-size: 13px;
+  color: $text-sec;
+  strong { color: $text; }
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-label { font-size: 12px; color: $text-sec; }
+
+.sort-select {
+  font-size: 13px;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 4px 8px;
+  outline: none;
+  color: $text;
+  background: $surface-2;
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.vl-table {
+  width: 100%;
+  min-width: 860px;
+
+  .mat-mdc-header-cell {
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-sec;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: $surface-2;
+  }
+
+  .mat-mdc-cell {
+    font-size: 13px;
+    color: $text;
+    padding: 12px 16px;
+  }
+
+  .vl-row:hover .mat-mdc-cell {
+    background: #fafafa;
+  }
+
+  .actions-header,
+  .actions-cell { text-align: center; }
+}
+
+// ── Cell: vehicle ─────────────────────────────────────────────────────────────
+.vehicle-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vehicle-thumb {
+  width: 52px;
+  height: 38px;
+  border-radius: 5px;
+  background: #eeeeee;
+  border: 1px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 20px; color: $text-ter; }
+}
+
+.vehicle-name {
+  font-weight: 500;
+  font-size: 13px;
+  margin: 0;
+}
+
+.vehicle-sub {
+  font-size: 11px;
+  color: $text-sec;
+  margin: 2px 0 0;
+  font-family: monospace;
+}
+
+// ── Cell: host ────────────────────────────────────────────────────────────────
+.host-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: $text-sec;
+  flex-shrink: 0;
+}
+
+.host-name  { font-size: 13px; font-weight: 500; margin: 0; }
+.host-email { font-size: 11px; color: $text-sec; margin: 1px 0 0; }
+
+// ── Cell: category ────────────────────────────────────────────────────────────
+.category-pill {
+  background: #f0f0f0;
+  color: $text-sec;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+// ── Badges: listing status ────────────────────────────────────────────────────
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  &.badge-active   { background: #e6f4ea; color: $success; }
+  &.badge-draft    { background: #f0f0f0; color: #555; }
+  &.badge-inactive { background: #fff3e0; color: $warn; }
+  &.badge-approved { background: #e6f4ea; color: $success; }
+  &.badge-pending  { background: #fff8e1; color: #8a6500; }
+  &.badge-rejected { background: #fdecea; color: #c0392b; }
+}
+
+// ── Cell: images ──────────────────────────────────────────────────────────────
+.img-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+
+  mat-icon { font-size: 15px; height: 15px; width: 15px; }
+
+  &.img-none    { color: #c0392b; }
+  &.img-pending { color: $warn; }
+  &.img-ok      { color: $success; }
+}
+
+// ── Cell: rating ──────────────────────────────────────────────────────────────
+.rating-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.star-icon {
+  font-size: 15px !important;
+  height: 15px !important;
+  width: 15px !important;
+  color: $accent;
+}
+
+.review-count { font-size: 11px; color: $text-ter; }
+.no-reviews   { font-size: 12px; color: $text-ter; }
+
+// ── Cell: actions ─────────────────────────────────────────────────────────────
+.approve-btn mat-icon { color: $success; }
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px;
+  color: $text-ter;
+
+  mat-icon { font-size: 48px; height: 48px; width: 48px; margin-bottom: 12px; }
+  p { font-size: 14px; margin: 0 0 16px; }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .vl-page   { padding: 12px; }
+  .filter-row { flex-direction: column; }
+  .filter-search,
+  .filter-select { min-width: unset; width: 100%; }
+  .reset-btn { width: 100%; }
+  .vl-stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .vl-stats-row { grid-template-columns: 1fr 1fr; }
+  .vl-header    { flex-direction: column; }
+}
+
+.clean-dialog .mat-mdc-dialog-container,
+.clean-dialog .mdc-dialog__surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}

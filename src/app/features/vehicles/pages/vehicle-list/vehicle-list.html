@@ -1,1 +1,562 @@
-<p>vehicle-list works!</p>
+<div class="vl-page">
+
+  <!-- ── Page Header ────────────────────────────────────────────────────── -->
+  <div class="vl-header">
+    <div>
+      <h1 class="vl-title">Vehicle Listings</h1>
+      <p class="vl-subtitle">Manage, approve, and monitor all host vehicles</p>
+    </div>
+
+    <button mat-flat-button color="primary" class="export-btn">
+      <mat-icon>download</mat-icon>
+      Export CSV
+    </button>
+  </div>
+
+  <!-- ── Stats Row ──────────────────────────────────────────────────────── -->
+  <div class="vl-stats-row">
+
+    <mat-card class="stat-card accent-border">
+      <mat-card-content>
+        <p class="stat-label">Total Vehicles</p>
+        <p class="stat-value">{{ stats.total }}</p>
+        <p class="stat-sub">Across all hosts</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Pending Approval</p>
+        <p class="stat-value warn">{{ stats.pendingApproval }}</p>
+        <p class="stat-sub">Awaiting admin review</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Active Listings</p>
+        <p class="stat-value success">{{ stats.active }}</p>
+        <p class="stat-sub">Live on platform</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Images Pending</p>
+        <p class="stat-value warn">{{ stats.imagesPending }}</p>
+        <p class="stat-sub">Awaiting image review</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Draft</p>
+        <p class="stat-value muted">{{ stats.draft }}</p>
+        <p class="stat-sub">Not yet published</p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- ── Filters ────────────────────────────────────────────────────────── -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+
+      <form [formGroup]="filterForm">
+
+        <div class="filter-row">
+
+          <!-- Search -->
+          <mat-form-field appearance="outline" class="filter-search">
+            <mat-label>Search vehicles or hosts</mat-label>
+
+            <input
+              matInput
+              formControlName="search"
+              placeholder="Name, email, make, model, plate…"
+            />
+
+            <mat-icon matPrefix>search</mat-icon>
+
+            <button
+              *ngIf="filterForm.get('search')?.value"
+              matSuffix
+              mat-icon-button
+              type="button"
+              (click)="filterForm.patchValue({ search: '' }); onFilterChange()">
+
+              <mat-icon>close</mat-icon>
+
+            </button>
+          </mat-form-field>
+
+          <!-- Listing Status -->
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Listing Status</mat-label>
+
+            <mat-select
+              formControlName="statusFilter"
+              (selectionChange)="onFilterChange()">
+
+              <mat-option
+                *ngFor="let s of listingStatuses"
+                [value]="s.value">
+
+                {{ s.label }}
+
+              </mat-option>
+
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Category -->
+          <!-- <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Category</mat-label>
+
+            <mat-select
+              formControlName="categoryFilter"
+              (selectionChange)="onFilterChange()">
+
+              <mat-option
+                *ngFor="let c of categories"
+                [value]="c.id">
+
+                {{ c.name }}
+
+              </mat-option>
+
+            </mat-select>
+          </mat-form-field> -->
+
+          <!-- Admin Approval -->
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Admin Approval</mat-label>
+
+            <mat-select
+              formControlName="approvalFilter"
+              (selectionChange)="onFilterChange()">
+
+              <mat-option
+                *ngFor="let a of approvalStatuses"
+                [value]="a.value">
+
+                {{ a.label }}
+
+              </mat-option>
+
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Reset -->
+          <button
+            mat-stroked-button
+            type="button"
+            class="reset-btn"
+            [disabled]="!hasActiveFilters"
+            (click)="resetFilters()">
+
+            <mat-icon>refresh</mat-icon>
+            Reset
+
+          </button>
+
+        </div>
+
+      </form>
+
+      <!-- Active Filter Chips -->
+      <div class="chip-row" *ngIf="activeFilters.length">
+
+        <span class="chip-label">Active filters:</span>
+
+        <mat-chip-listbox>
+
+          <mat-chip
+            *ngFor="let chip of activeFilters"
+            [removable]="true"
+            (removed)="removeFilter(chip.field)"
+            class="filter-chip">
+
+            {{ chip.label }}
+
+            <mat-icon matChipRemove>cancel</mat-icon>
+
+          </mat-chip>
+
+        </mat-chip-listbox>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- ── Table Card ─────────────────────────────────────────────────────── -->
+  <mat-card class="table-card">
+
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+
+      <span class="result-count">
+        <strong>{{ pagination.totalRecords }}</strong>
+        vehicle{{ pagination.totalRecords !== 1 ? 's' : '' }} found
+      </span>
+
+      <!-- IMPORTANT FIX -->
+      <div class="toolbar-right" [formGroup]="filterForm">
+
+        <span class="sort-label">Sort by</span>
+
+        <mat-select
+          class="sort-select"
+          formControlName="sortBy"
+          (selectionChange)="onFilterChange()">
+
+          <mat-option
+            *ngFor="let s of sortOptions"
+            [value]="s.value">
+
+            {{ s.label }}
+
+          </mat-option>
+
+        </mat-select>
+
+      </div>
+
+    </div>
+
+    <!-- Loading -->
+    <mat-progress-bar
+      *ngIf="isLoading"
+      mode="indeterminate"
+      color="accent">
+    </mat-progress-bar>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+
+      <table
+        mat-table
+        [dataSource]="vehicles"
+        class="vl-table">
+
+        <!-- Vehicle -->
+        <ng-container matColumnDef="vehicle">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Vehicle
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <div class="vehicle-cell">
+
+              <div class="vehicle-thumb">
+                <mat-icon>directions_car</mat-icon>
+              </div>
+
+              <div>
+
+                <p class="vehicle-name">
+                  {{ v.year }} {{ v.make }} {{ v.model }}
+                </p>
+
+                <p class="vehicle-sub">
+
+                  {{ v.licensePlate }}
+
+                  <ng-container *ngIf="v.startingDailyRate">
+                    · ${{ v.startingDailyRate }}/day
+                  </ng-container>
+
+                  <ng-container *ngIf="!v.startingDailyRate">
+                    · No pricing
+                  </ng-container>
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Host -->
+        <ng-container matColumnDef="host">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Host
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <div class="host-cell">
+
+              <div class="avatar">
+                {{ getHostInitials(v.hostName) }}
+              </div>
+
+              <div>
+
+                <p class="host-name">{{ v.hostName }}</p>
+                <p class="host-email">{{ v.hostEmail }}</p>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Category -->
+        <ng-container matColumnDef="category">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Category
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <span class="category-pill">
+              {{ v.category }}
+            </span>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Status
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(v.listingStatus)">
+
+              <span class="dot"></span>
+              {{ v.listingStatus }}
+
+            </span>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Admin Approval -->
+        <ng-container matColumnDef="adminApproval">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Admin Approval
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <span
+              class="status-badge"
+              [ngClass]="getApprovalClass(v.adminApproval)">
+
+              {{ v.adminApproval }}
+
+            </span>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Images -->
+        <ng-container matColumnDef="images">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Images
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <ng-container *ngIf="v.images.total === 0">
+
+              <span class="img-status img-none">
+                <mat-icon>hide_image</mat-icon>
+                No images
+              </span>
+
+            </ng-container>
+
+            <ng-container *ngIf="v.images.total > 0 && v.images.pending > 0">
+
+              <span class="img-status img-pending">
+                <mat-icon>photo_library</mat-icon>
+                {{ v.images.pending }} pending
+              </span>
+
+            </ng-container>
+
+            <ng-container *ngIf="v.images.total > 0 && v.images.pending === 0">
+
+              <span class="img-status img-ok">
+                <mat-icon>check_circle</mat-icon>
+                {{ v.images.total }} approved
+              </span>
+
+            </ng-container>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Rating -->
+        <ng-container matColumnDef="rating">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Rating
+          </th>
+
+          <td mat-cell *matCellDef="let v">
+
+            <ng-container *ngIf="v.totalReviews > 0; else noRating">
+
+              <div class="rating-cell">
+
+                <mat-icon class="star-icon">star</mat-icon>
+
+                <span>
+                  {{ v.averageRating | number:'1.1-1' }}
+                </span>
+
+                <span class="review-count">
+                  ({{ v.totalReviews }})
+                </span>
+
+              </div>
+
+            </ng-container>
+
+            <ng-template #noRating>
+
+              <span class="no-reviews">
+                No reviews
+              </span>
+
+            </ng-template>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+
+          <th mat-header-cell *matHeaderCellDef class="actions-header">
+            Actions
+          </th>
+
+          <td mat-cell *matCellDef="let v" class="actions-cell">
+
+            <!-- View -->
+            <!-- <button
+              mat-icon-button
+              matTooltip="View details"
+              (click)="viewVehicle(v.id)">
+
+              <mat-icon>visibility</mat-icon>
+
+            </button> -->
+
+            <!-- Approve -->
+            <button
+              mat-icon-button
+              [matTooltip]="v.adminApproval === 'APPROVED' ? 'Revoke approval' : 'Approve vehicle'"
+              [class.approve-btn]="v.adminApproval !== 'APPROVED'"
+              [disabled]="approvingId === v.id"
+              (click)="toggleApproval(v)">
+
+              <mat-spinner
+                *ngIf="approvingId === v.id"
+                diameter="18">
+              </mat-spinner>
+
+              <mat-icon *ngIf="approvingId !== v.id">
+                {{ v.adminApproval === 'APPROVED' ? 'shield' : 'verified_user' }}
+              </mat-icon>
+
+            </button>
+
+            <!-- Images -->
+            <button
+              mat-icon-button
+              matTooltip="Review images"
+              [matBadge]="v.images.pending || null"
+              matBadgeColor="warn"
+              matBadgeSize="small"
+              (click)="openImageApproval(v)">
+
+              <mat-icon>photo_library</mat-icon>
+
+            </button>
+
+          </td>
+
+        </ng-container>
+
+        <!-- Header -->
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true">
+        </tr>
+
+        <!-- Rows -->
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns;"
+          class="vl-row">
+        </tr>
+
+        <!-- Empty -->
+        <tr class="mat-row no-data-row" *matNoDataRow>
+
+          <td [colSpan]="displayedColumns.length">
+
+            <div class="empty-state">
+
+              <mat-icon>directions_car</mat-icon>
+
+              <p>No vehicles match your filters</p>
+
+              <button
+                mat-stroked-button
+                (click)="resetFilters()">
+
+                Clear filters
+
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </table>
+
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="pagination.totalRecords"
+      [pageIndex]="pagination.pageNumber - 1"
+      [pageSize]="pagination.pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons
+      (page)="onPageChange($event)">
+    </mat-paginator>
+
+  </mat-card>
+
+</div>

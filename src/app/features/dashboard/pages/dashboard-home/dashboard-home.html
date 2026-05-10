@@ -7,10 +7,11 @@
 
   <!-- Stat cards -->
   <div class="stats-grid">
-    <mat-card class="stat-card" *ngFor="let s of stats">
+    <mat-card class="stat-card" *ngFor="let s of stats" (click)="navigate(s.route)" [class.clickable]="s.route">
       <div class="stat-card__icon" [style.background]="s.color + '18'" [style.color]="s.color">
         <mat-icon>{{ s.icon }}</mat-icon>
       </div>
+
       <div>
         <div class="stat-card__value">{{ s.value }}</div>
         <div class="stat-card__label">{{ s.label }}</div>
