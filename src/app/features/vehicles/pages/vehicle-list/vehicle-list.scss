@@ -1,78 +1,110 @@
-// ── Brand tokens ──────────────────────────────────────────────────────────────
 $primary:       #0F0F0F;
 $accent:        #CBA135;
 $accent-light:  #f5e9c8;
 $success:       #1e7e34;
 $warn:          #b05e00;
 $surface:       #ffffff;
-$surface-2:     #f8f8f8;
+$surface-2:     #f7f7f7;
 $border:        #e5e5e5;
 $text:          #0F0F0F;
 $text-sec:      #6b6b6b;
-$text-ter:      #a0a0a0;
+$text-ter:      #9c9c9c;
 $radius:        8px;
 
-// ── Page shell ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// PAGE
+// ─────────────────────────────────────────────────────────────────────────────
 .vl-page {
-  padding: 24px;
-  max-width: 1280px;
+  padding: 10px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
+  background: #fafafa;
 }
 
-// ── Header ────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────────────────────────
 .vl-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .vl-title {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
   color: $text;
+  line-height: 1.2;
 }
 
 .vl-subtitle {
   font-size: 13px;
   color: $text-sec;
-  margin: 2px 0 0;
+  margin-top: 3px;
+  line-height: 1.4;
 }
 
 .export-btn {
+  height: 38px !important;
+  min-width: 110px !important;
+  padding: 0 14px !important;
+  border-radius: 7px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
   background: $accent !important;
   color: $primary !important;
-  mat-icon { margin-right: 4px; font-size: 18px; }
+
+  mat-icon {
+    margin-right: 5px;
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
 }
 
-// ── Stats row ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────────────────────────────────────
 .vl-stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .stat-card {
-  &.accent-border { border-left: 3px solid $accent !important; }
+  border-radius: $radius !important;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.04) !important;
+  min-height: 80px;
 
-  mat-card-content { padding: 14px 16px !important; }
+  &.accent-border {
+    border-left: 4px solid $accent !important;
+  }
+
+  mat-card-content {
+    padding: 12px 14px !important;
+  }
 
   .stat-label {
     font-size: 12px;
     color: $text-sec;
-    margin: 0 0 4px;
+    margin-bottom: 4px;
+    line-height: 1.3;
   }
 
   .stat-value {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
+    line-height: 1.1;
     margin: 0;
     color: $text;
+
     &.success { color: $success; }
     &.warn    { color: $warn; }
     &.muted   { color: $text-sec; }
@@ -81,20 +113,28 @@ $radius:        8px;
   .stat-sub {
     font-size: 11px;
     color: $text-ter;
-    margin: 2px 0 0;
+    margin-top: 4px;
   }
 }
 
-// ── Filter card ───────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// FILTER CARD
+// ─────────────────────────────────────────────────────────────────────────────
 .filter-card {
-  mat-card-content { padding: 16px !important; }
+  border-radius: $radius !important;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.04) !important;
+
+  mat-card-content {
+    padding: 12px !important;
+  }
 }
 
 .filter-row {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .filter-search {
@@ -104,110 +144,209 @@ $radius:        8px;
 
 .filter-select {
   flex: 1;
-  min-width: 160px;
+  min-width: 170px;
 }
 
 .reset-btn {
-  height: 56px;    // matches outline form-field height
-  align-self: flex-start;
-  margin-top: 0;
+  height: 42px !important;
+  min-width: 95px !important;
+  border-radius: 7px !important;
+  font-size: 13px !important;
+  padding: 0 12px !important;
 }
 
-// Active chips
+// ─────────────────────────────────────────────────────────────────────────────
+// MATERIAL FORM FIELDS
+// ─────────────────────────────────────────────────────────────────────────────
+::ng-deep {
+
+  .filter-row .mat-mdc-form-field {
+    --mat-form-field-container-height: 42px;
+    --mat-form-field-container-vertical-padding: 6px;
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .filter-row .mat-mdc-text-field-wrapper {
+    border-radius: 8px !important;
+    background: white;
+  }
+
+  .filter-row .mat-mdc-form-field-infix {
+    min-height: 42px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .filter-row input,
+  .filter-row .mat-mdc-select-value,
+  .filter-row .mat-mdc-floating-label {
+    font-size: 13px !important;
+  }
+
+  .filter-row .mat-icon {
+    font-size: 19px !important;
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+
+  .mat-mdc-form-field-bottom-align::before {
+    display: none !important;
+  }
+
+  .mat-mdc-icon-button {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .mat-mdc-icon-button .mat-icon {
+    font-size: 19px !important;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FILTER CHIPS
+// ─────────────────────────────────────────────────────────────────────────────
 .chip-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   flex-wrap: wrap;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .chip-label {
-  font-size: 12px;
+  font-size: 11px;
   color: $text-sec;
 }
 
 .filter-chip {
   background: $accent-light !important;
   color: #7a5e10 !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
+  height: 28px !important;
+  padding: 0 8px !important;
 
-  mat-icon { color: #a07820 !important; }
+  mat-icon {
+    font-size: 13px !important;
+    width: 13px !important;
+    height: 13px !important;
+  }
 }
 
-// ── Table card ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE CARD
+// ─────────────────────────────────────────────────────────────────────────────
 .table-card {
   overflow: hidden;
   padding: 0 !important;
+  border-radius: $radius !important;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.04) !important;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TOOLBAR
+// ─────────────────────────────────────────────────────────────────────────────
 .table-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 10px 12px;
   border-bottom: 1px solid $border;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  background: white;
 }
 
 .result-count {
   font-size: 13px;
   color: $text-sec;
-  strong { color: $text; }
+
+  strong {
+    color: $text;
+  }
 }
 
 .toolbar-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.sort-label { font-size: 12px; color: $text-sec; }
+.sort-label {
+  font-size: 12px;
+  color: $text-sec;
+}
 
 .sort-select {
-  font-size: 13px;
+  height: 34px;
+  font-size: 12px;
   border: 1px solid $border;
-  border-radius: $radius;
-  padding: 4px 8px;
+  border-radius: 7px;
+  padding: 0 10px;
   outline: none;
   color: $text;
   background: $surface-2;
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE
+// ─────────────────────────────────────────────────────────────────────────────
 .table-wrapper {
   overflow-x: auto;
+  background: white;
 }
 
 .vl-table {
   width: 100%;
-  min-width: 860px;
+  min-width: 900px;
+
+  .mat-mdc-header-row {
+    height: 44px;
+  }
+
+  .mat-mdc-row {
+    height: 62px;
+
+    &:hover .mat-mdc-cell {
+      background: #fafafa;
+    }
+  }
 
   .mat-mdc-header-cell {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     color: $text-sec;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    background: $surface-2;
+    background: #fcfcfc;
+    padding: 10px !important;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
   }
 
   .mat-mdc-cell {
     font-size: 13px;
     color: $text;
-    padding: 12px 16px;
-  }
-
-  .vl-row:hover .mat-mdc-cell {
-    background: #fafafa;
+    padding: 10px !important;
+    border-bottom: 1px solid #f1f1f1;
+    line-height: 1.4;
+    vertical-align: middle;
   }
 
   .actions-header,
-  .actions-cell { text-align: center; }
+  .actions-cell {
+    text-align: center;
+  }
 }
 
-// ── Cell: vehicle ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// VEHICLE CELL
+// ─────────────────────────────────────────────────────────────────────────────
 .vehicle-cell {
   display: flex;
   align-items: center;
@@ -215,9 +354,9 @@ $radius:        8px;
 }
 
 .vehicle-thumb {
-  width: 52px;
-  height: 38px;
-  border-radius: 5px;
+  width: 56px;
+  height: 40px;
+  border-radius: 6px;
   background: #eeeeee;
   border: 1px solid $border;
   display: flex;
@@ -225,23 +364,29 @@ $radius:        8px;
   justify-content: center;
   flex-shrink: 0;
 
-  mat-icon { font-size: 20px; color: $text-ter; }
+  mat-icon {
+    font-size: 22px;
+    color: $text-ter;
+  }
 }
 
 .vehicle-name {
-  font-weight: 500;
   font-size: 13px;
+  font-weight: 600;
   margin: 0;
+  line-height: 1.3;
 }
 
 .vehicle-sub {
   font-size: 11px;
   color: $text-sec;
-  margin: 2px 0 0;
+  margin-top: 2px;
   font-family: monospace;
 }
 
-// ── Cell: host ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// HOST CELL
+// ─────────────────────────────────────────────────────────────────────────────
 .host-cell {
   display: flex;
   align-items: center;
@@ -249,48 +394,60 @@ $radius:        8px;
 }
 
 .avatar {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #e8e8e8;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: $text-sec;
   flex-shrink: 0;
 }
 
-.host-name  { font-size: 13px; font-weight: 500; margin: 0; }
-.host-email { font-size: 11px; color: $text-sec; margin: 1px 0 0; }
+.host-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
 
-// ── Cell: category ────────────────────────────────────────────────────────────
+.host-email {
+  font-size: 11px;
+  color: $text-sec;
+  margin-top: 2px;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CATEGORY
+// ─────────────────────────────────────────────────────────────────────────────
 .category-pill {
   background: #f0f0f0;
   color: $text-sec;
   border-radius: 20px;
-  padding: 3px 10px;
+  padding: 4px 10px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-// ── Badges: listing status ────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// STATUS BADGES
+// ─────────────────────────────────────────────────────────────────────────────
 .status-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   border-radius: 20px;
-  padding: 3px 10px;
+  padding: 4px 10px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 
   .dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: currentColor;
-    flex-shrink: 0;
   }
 
   &.badge-active   { background: #e6f4ea; color: $success; }
@@ -301,21 +458,25 @@ $radius:        8px;
   &.badge-rejected { background: #fdecea; color: #c0392b; }
 }
 
-// ── Cell: images ──────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// IMAGE STATUS
+// ─────────────────────────────────────────────────────────────────────────────
 .img-status {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 12px;
 
-  mat-icon { font-size: 15px; height: 15px; width: 15px; }
-
-  &.img-none    { color: #c0392b; }
-  &.img-pending { color: $warn; }
-  &.img-ok      { color: $success; }
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
 }
 
-// ── Cell: rating ──────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// RATING
+// ─────────────────────────────────────────────────────────────────────────────
 .rating-cell {
   display: flex;
   align-items: center;
@@ -324,45 +485,76 @@ $radius:        8px;
 }
 
 .star-icon {
-  font-size: 15px !important;
-  height: 15px !important;
-  width: 15px !important;
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
   color: $accent;
 }
 
-.review-count { font-size: 11px; color: $text-ter; }
-.no-reviews   { font-size: 12px; color: $text-ter; }
+.review-count,
+.no-reviews {
+  font-size: 11px;
+  color: $text-ter;
+}
 
-// ── Cell: actions ─────────────────────────────────────────────────────────────
-.approve-btn mat-icon { color: $success; }
-
-// ── Empty state ───────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// EMPTY STATE
+// ─────────────────────────────────────────────────────────────────────────────
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 16px;
+  padding: 40px 16px;
   color: $text-ter;
 
-  mat-icon { font-size: 48px; height: 48px; width: 48px; margin-bottom: 12px; }
-  p { font-size: 14px; margin: 0 0 16px; }
+  mat-icon {
+    font-size: 44px;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 14px;
+  }
 }
 
-// ── Responsive ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// RESPONSIVE
+// ─────────────────────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
-  .vl-page   { padding: 12px; }
-  .filter-row { flex-direction: column; }
+
+  .vl-page {
+    padding: 8px;
+  }
+
+  .vl-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vl-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filter-row {
+    flex-direction: column;
+  }
+
   .filter-search,
-  .filter-select { min-width: unset; width: 100%; }
-  .reset-btn { width: 100%; }
-  .vl-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .filter-select,
+  .reset-btn {
+    width: 100%;
+  }
+
+  .vl-table {
+    min-width: 820px;
+  }
 }
 
-@media (max-width: 480px) {
-  .vl-stats-row { grid-template-columns: 1fr 1fr; }
-  .vl-header    { flex-direction: column; }
-}
-
+// ─────────────────────────────────────────────────────────────────────────────
+// DIALOG
+// ─────────────────────────────────────────────────────────────────────────────
 .clean-dialog .mat-mdc-dialog-container,
 .clean-dialog .mdc-dialog__surface {
   background: transparent !important;

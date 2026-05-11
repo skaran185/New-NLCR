@@ -13,7 +13,9 @@ export const LISTING_STATUSES = [
   { value: 'ALL', label: 'All statuses' },
   { value: 'ACTIVE', label: 'Active' },
   { value: 'DRAFT', label: 'Draft' },
-  { value: 'INACTIVE', label: 'Inactive' },
+  { value: 'PENDING_APPROVAL', label: 'Pending Approval' },
+  { value: 'PAUSED', label: 'Paused' },
+  { value: 'REMOVED', label: 'Removed' },
 ];
 
 export const APPROVAL_STATUSES = [

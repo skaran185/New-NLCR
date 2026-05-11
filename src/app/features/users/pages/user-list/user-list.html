@@ -1,1 +1,255 @@
-<p>user-list works!</p>
+<div class="ul-page">
+
+  <!-- ── Header ───────────────────────────────────────────────────────────── -->
+  <div class="ul-header">
+    <div>
+      <h1 class="ul-title">Users</h1>
+      <p class="ul-subtitle">All platform users — customers and hosts</p>
+    </div>
+  </div>
+
+  <!-- ── Stats ────────────────────────────────────────────────────────────── -->
+  <div class="ul-stats-row">
+    <mat-card class="stat-card accent-border">
+      <mat-card-content>
+        <p class="stat-label">Total Users</p>
+        <p class="stat-value">{{ stats.total }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Customers</p>
+        <p class="stat-value">{{ stats.customers }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Hosts</p>
+        <p class="stat-value accent">{{ stats.hosts }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <p class="stat-label">Suspended</p>
+        <p class="stat-value danger">{{ stats.suspended }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ── Filters ───────────────────────────────────────────────────────────── -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <form [formGroup]="filterForm">
+        <div class="filter-row">
+
+          <mat-form-field appearance="outline" class="filter-search">
+            <mat-label>Search users</mat-label>
+            <input matInput formControlName="search"
+                   placeholder="Name, email, or phone…">
+            <mat-icon matPrefix>search</mat-icon>
+            <button *ngIf="filterForm.get('search')?.value"
+                    matSuffix mat-icon-button
+                    (click)="filterForm.patchValue({ search: '' }); onFilterChange()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="roleFilter" (selectionChange)="onFilterChange()">
+              <mat-option *ngFor="let r of roleOptions" [value]="r.value">
+                {{ r.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Account Status</mat-label>
+            <mat-select formControlName="accountStatusFilter" (selectionChange)="onFilterChange()">
+              <mat-option *ngFor="let s of statusOptions" [value]="s.value">
+                {{ s.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-stroked-button class="reset-btn"
+                  [disabled]="!hasActiveFilters"
+                  (click)="resetFilters()">
+            <mat-icon>refresh</mat-icon> Reset
+          </button>
+
+        </div>
+      </form>
+
+      <!-- Active chips -->
+      <div class="chip-row" *ngIf="activeFilters.length">
+        <span class="chip-label">Active filters:</span>
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let chip of activeFilters"
+                    [removable]="true"
+                    (removed)="removeFilter(chip.field)"
+                    class="filter-chip">
+            {{ chip.label }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- ── Table ─────────────────────────────────────────────────────────────── -->
+  <mat-card class="table-card">
+
+    <div class="table-toolbar">
+      <span class="result-count">
+        <strong>{{ totalRecords }}</strong> user{{ totalRecords !== 1 ? 's' : '' }} found
+      </span>
+      <!-- <div class="toolbar-right">
+        <span class="sort-label">Sort</span>
+        <mat-select class="sort-select"
+                    [formControl]="sortByControl"
+                    (selectionChange)="onFilterChange()">
+          <mat-option *ngFor="let s of sortOptions" [value]="s.value">{{ s.label }}</mat-option>
+        </mat-select>
+      </div> -->
+    </div>
+
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent"></mat-progress-bar>
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="users" [trackBy]="trackById" class="ul-table">
+
+        <!-- User column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>User</th>
+          <td mat-cell *matCellDef="let u">
+            <div class="user-cell">
+              <div class="avatar" *ngIf="!u.profileImageUrl">
+                {{ getInitials(u.fullName) }}
+              </div>
+              <img *ngIf="u.profileImageUrl"
+                   [src]="u.profileImageUrl"
+                   class="avatar-img"
+                   [alt]="u.fullName ?? 'User'">
+              <div>
+                <p class="user-name">{{ u.fullName ?? '—' }}</p>
+                <p class="user-email">{{ u.email ?? '—' }}</p>
+                <p class="user-phone" *ngIf="u.mobileNumber">{{ u.mobileNumber }}</p>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Role column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let u">
+            <span class="status-badge" [ngClass]="getRoleClass(u.roleType)">
+              {{ u.roleType }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Account Status column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let u">
+            <span class="status-badge" [ngClass]="getStatusClass(u.accountStatus)">
+              <span class="dot"></span>{{ u.accountStatus }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Country + Joined column -->
+        <ng-container matColumnDef="country">
+          <!-- <th mat-header-cell *matHeaderCellDef>Country / Joined</th> -->
+          <th mat-header-cell *matHeaderCellDef>Joined</th>
+          <td mat-cell *matCellDef="let u">
+            <!-- <p class="meta-primary">{{ u.countryName ?? '—' }}</p> -->
+            <p class="meta-secondary">{{ u.createdAt | date:'dd MMM yyyy' }}</p>
+          </td>
+        </ng-container>
+
+        <!-- Verification column -->
+        <ng-container matColumnDef="verification">
+          <th mat-header-cell *matHeaderCellDef>Verification</th>
+          <td mat-cell *matCellDef="let u">
+            <div class="verify-row">
+              <span class="verify-badge"
+                    [class.verified]="u.isEmailVerified"
+                    [matTooltip]="u.isEmailVerified ? 'Email verified' : 'Email not verified'">
+                <mat-icon>email</mat-icon>
+              </span>
+              <span class="verify-badge"
+                    [class.verified]="u.isMobileVerified"
+                    [matTooltip]="u.isMobileVerified ? 'Mobile verified' : 'Mobile not verified'">
+                <mat-icon>phone_iphone</mat-icon>
+              </span>
+              <!-- <span class="verify-badge"
+                    [class.verified]="u.is2faEnabled"
+                    [matTooltip]="u.is2faEnabled ? '2FA enabled' : '2FA disabled'">
+                <mat-icon>security</mat-icon>
+              </span> -->
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Last Login / Activity column -->
+        <ng-container matColumnDef="activity">
+          <th mat-header-cell *matHeaderCellDef>Last Login</th>
+          <td mat-cell *matCellDef="let u">
+            <ng-container *ngIf="u.lastLoginAt; else neverLogged">
+              <p class="meta-primary">{{ u.lastLoginAt | date:'dd MMM yyyy' }}</p>
+              <p class="meta-secondary">{{ u.lastLoginAt | date:'HH:mm' }}</p>
+            </ng-container>
+            <ng-template #neverLogged>
+              <span class="meta-secondary">Never</span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Booking / Vehicle counts column -->
+        <ng-container matColumnDef="counts">
+          <th mat-header-cell *matHeaderCellDef>Bookings / Vehicles</th>
+          <td mat-cell *matCellDef="let u">
+            <div class="counts-row">
+              <span class="count-pill" matTooltip="Total bookings">
+                <mat-icon>calendar_today</mat-icon> {{ u.totalBookings }}
+              </span>
+              <span class="count-pill" *ngIf="u.roleType === 'HOST'"
+                    matTooltip="Active vehicles">
+                <mat-icon>directions_car</mat-icon> {{ u.totalVehicles }}
+              </span>
+              <span class="meta-secondary" *ngIf="u.roleType !== 'HOST'">—</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ul-row"></tr>
+
+        <!-- Empty state -->
+        <tr class="mat-row" *matNoDataRow>
+          <td [colSpan]="displayedColumns.length">
+            <div class="empty-state">
+              <mat-icon>people_outline</mat-icon>
+              <p>No users match your filters</p>
+              <button mat-stroked-button (click)="resetFilters()">Clear filters</button>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalRecords"
+      [pageIndex]="pageNumber - 1"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons
+      (page)="onPageChange($event)">
+    </mat-paginator>
+
+  </mat-card>
+</div>
