@@ -76,7 +76,7 @@ $ease:       0.18s ease;
 // ── Dialog shell ──────────────────────────────────────────────────
 .dlg {
   display: flex; flex-direction: column;
-  background: $bg; width: 100%; max-width: 940px;
+  background: $bg; width: 100%; max-width: 960px;
   height: 90vh; max-height: 90vh;
   overflow: hidden;
   border-radius: 16px;

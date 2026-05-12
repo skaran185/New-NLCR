@@ -56,40 +56,16 @@ export class ImageReviewDialogComponent implements OnInit {
   }
 
   loadImages(): void {
-  this.hasError = false;
-
-  this.images$ = this.vehicleService.getVehicleImages(this.vehicleId).pipe(
-    map((response: any) => {
-      const images = response?.data ?? response ?? [];
-
-      // Duplicate images for UI testing
-      const duplicatedImages = [
-        ...images,
-        ...images.map((img: VehicleImage, index: number) => ({
-          ...img,
-          id: img.id + 100000 + index // unique fake id
-        })),
-        ...images.map((img: VehicleImage, index: number) => ({
-          ...img,
-          id: img.id + 200000 + index // another duplicate set
-        }))
-      ];
-
-      return duplicatedImages;
-    }),
-
-    tap((images: VehicleImage[]) => {
-      this.imagesSnapshot = images;
-
-      // Pre-populate approved set from existing DB values
-      this.approvedIds = new Set(
-        images
-          .filter(i => i.isApproved === true)
-          .map(i => i.id)
-      );
-    })
-  );
-}
+    this.hasError = false;
+    this.images$ = this.vehicleService.getVehicleImages(this.vehicleId).pipe(
+      map((response: any) => response?.data ?? response ?? []),
+      tap((images: VehicleImage[]) => {
+        this.imagesSnapshot = images;
+        // Pre-populate approved set from existing DB values
+        this.approvedIds = new Set(images.filter(i => i.isApproved === true).map(i => i.id));
+      })
+    );
+  }
 
   getStatus(id: string): 'approved' | 'pending' {
     return this.approvedIds.has(id) ? 'approved' : 'pending';
