@@ -1,142 +1,136 @@
 <!-- Lightbox -->
 <div class="lightbox-overlay" *ngIf="lightboxImage" (click)="closeLightbox()">
-  <div class="lightbox-box" (click)="$event.stopPropagation()">
-    <button class="lb-close" (click)="closeLightbox()">
-      <mat-icon>close</mat-icon>
-    </button>
-    <div class="lb-img-wrap">
-      <img [src]="lightboxImage.imageUrl" alt="Vehicle image" />
+    <div class="lightbox-box" (click)="$event.stopPropagation()">
+        <button class="lb-close" (click)="closeLightbox()">
+            <mat-icon>close</mat-icon>
+        </button>
+        <div class="lb-img-wrap">
+            <img [src]="lightboxImage.imageUrl" alt="Vehicle image" />
+        </div>
+        <div class="lb-actions">
+            <button class="lb-btn lb-approve" [class.active]="getStatus(lightboxImage.id) === 'approved'"
+                (click)="toggleApprove(lightboxImage.id)">
+                <mat-icon>{{ getStatus(lightboxImage.id) === 'approved' ? 'check_circle' : 'radio_button_unchecked'
+                    }}</mat-icon>
+                {{ getStatus(lightboxImage.id) === 'approved' ? 'Approved — tap to undo' : 'Mark as Approved' }}
+            </button>
+        </div>
     </div>
-    <div class="lb-actions">
-      <button class="lb-btn lb-approve"
-        [class.active]="getStatus(lightboxImage.id) === 'approved'"
-        (click)="approve(lightboxImage.id)">
-        <mat-icon>check_circle</mat-icon> Approve
-      </button>
-      <button class="lb-btn lb-reject"
-        [class.active]="getStatus(lightboxImage.id) === 'rejected'"
-        (click)="reject(lightboxImage.id)">
-        <mat-icon>cancel</mat-icon> Reject
-      </button>
-    </div>
-  </div>
 </div>
 
 <!-- Dialog -->
 <div class="dlg">
 
-  <!-- Header -->
-  <div class="dlg-header">
-    <div class="dlg-header-left">
-      <span class="dlg-icon"><mat-icon>photo_library</mat-icon></span>
-      <div>
-        <h2 class="dlg-title">Image Review</h2>
-        <p class="dlg-sub" *ngIf="data.vehicleName">{{ data.vehicleName }}</p>
-      </div>
-    </div>
-    <button mat-icon-button class="dlg-close" (click)="close()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
-  <!-- Async content -->
-  <ng-container *ngIf="images$ | async as images; else loadingTpl">
-
-    <!-- Stats -->
-    <div class="stats-row">
-      <div class="s-chip s-total"><span class="s-n">{{ totalCount }}</span><span class="s-l">Total</span></div>
-      <div class="s-chip s-approved"><mat-icon>check_circle</mat-icon><span class="s-n">{{ approvedCount }}</span><span class="s-l">Approved</span></div>
-      <div class="s-chip s-rejected"><mat-icon>cancel</mat-icon><span class="s-n">{{ rejectedCount }}</span><span class="s-l">Rejected</span></div>
-      <!-- <div class="s-chip s-pending"><mat-icon>hourglass_empty</mat-icon><span class="s-n">{{ pendingCount }}</span><span class="s-l">Pending</span></div> -->
-      <button class="approve-all-btn" *ngIf="pendingCount > 0" (click)="approveAll()">
-        <mat-icon>done_all</mat-icon> Approve All
-      </button>
-    </div>
-
-    <!-- Empty -->
-    <div class="empty-state" *ngIf="images.length === 0">
-      <mat-icon>image_not_supported</mat-icon>
-      <p>No images found for this vehicle.</p>
-    </div>
-
-    <!-- Grid -->
-    <div class="img-grid" *ngIf="images.length > 0">
-      <div class="img-card"
-        *ngFor="let image of images; let i = index"
-        [class.approved]="getStatus(image.id) === 'approved'"
-        [class.rejected]="getStatus(image.id) === 'rejected'"
-        [style.animation-delay]="(i * 50) + 'ms'">
-
-        <!-- Badge -->
-        <div class="card-badge">
-          <span class="badge b-approved" *ngIf="getStatus(image.id) === 'approved'">
-            <mat-icon>check_circle</mat-icon> Approved
-          </span>
-          <span class="badge b-rejected" *ngIf="getStatus(image.id) === 'rejected'">
-            <mat-icon>cancel</mat-icon> Rejected
-          </span>
-          <span class="badge b-pending" *ngIf="getStatus(image.id) === 'pending'">
-            <mat-icon>hourglass_empty</mat-icon> Pending
-          </span>
-          <span class="primary-tag" *ngIf="image.isPrimary">Primary</span>
+    <!-- Header -->
+    <div class="dlg-header">
+        <div class="dlg-header-left">
+            <span class="dlg-icon"><mat-icon>photo_library</mat-icon></span>
+            <div>
+                <h2 class="dlg-title">Image Review</h2>
+                <p class="dlg-sub" *ngIf="data.vehicleName">{{ data.vehicleName }}</p>
+            </div>
         </div>
-
-        <!-- Image -->
-        <div class="card-img" (click)="openLightbox(image)">
-          <img [src]="image.imageUrl" alt="Vehicle image" loading="lazy" />
-          <div class="img-hover-overlay"><mat-icon>zoom_in</mat-icon></div>
-        </div>
-
-        <!-- Actions -->
-        <div class="card-btns">
-          <button class="c-btn c-approve"
-            [class.active]="getStatus(image.id) === 'approved'"
-            (click)="approve(image.id)">
-            <mat-icon>check</mat-icon><span>Approve</span>
-          </button>
-          <button class="c-btn c-reset"
-            *ngIf="getStatus(image.id) !== 'pending'"
-            (click)="reset(image.id)"
-            matTooltip="Reset">
-            <mat-icon>refresh</mat-icon>
-          </button>
-          <button class="c-btn c-reject"
-            [class.active]="getStatus(image.id) === 'rejected'"
-            (click)="reject(image.id)">
-            <mat-icon>close</mat-icon><span>Reject</span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="dlg-footer" *ngIf="images.length > 0">
-      <div class="footer-status" [class.ready]="allReviewed">
-        <mat-icon>{{ allReviewed ? 'task_alt' : 'info_outline' }}</mat-icon>
-        <span *ngIf="!allReviewed">{{ pendingCount }} image{{ pendingCount !== 1 ? 's' : '' }} pending review</span>
-        <span *ngIf="allReviewed">All reviewed — ready to submit</span>
-      </div>
-      <div class="footer-btns">
-        <button mat-stroked-button class="btn-cancel" (click)="close()">Cancel</button>
-        <button mat-flat-button class="btn-submit"
-          [disabled]="isSubmitting || (approvedCount === 0 && rejectedCount === 0)"
-          (click)="submit()">
-          <mat-spinner diameter="16" *ngIf="isSubmitting"></mat-spinner>
-          <mat-icon *ngIf="!isSubmitting">send</mat-icon>
-          {{ isSubmitting ? 'Submitting…' : 'Submit Review' }}
+        <button mat-icon-button class="dlg-close" (click)="close()">
+            <mat-icon>close</mat-icon>
         </button>
-      </div>
     </div>
 
-  </ng-container>
+    <!-- Async content -->
+    <ng-container *ngIf="images$ | async as images; else loadingTpl">
 
-  <!-- Loading template -->
-  <ng-template #loadingTpl>
-    <div class="loading-state">
-      <div class="spinner-ring"></div>
-      <p>Fetching images…</p>
-    </div>
-  </ng-template>
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="s-chip">
+                <span class="s-n">{{ totalCount }}</span>
+                <span class="s-l">Total</span>
+            </div>
+            <div class="s-chip s-approved">
+                <mat-icon>check_circle</mat-icon>
+                <span class="s-n">{{ approvedCount }}</span>
+                <span class="s-l">Approved</span>
+            </div>
+            <div class="s-chip s-pending">
+                <mat-icon>hourglass_empty</mat-icon>
+                <span class="s-n">{{ pendingCount }}</span>
+                <span class="s-l">Not Reviewed</span>
+            </div>
+            <button class="approve-all-btn" *ngIf="pendingCount > 0" (click)="approveAll()">
+                <mat-icon>done_all</mat-icon> Approve All
+            </button>
+            <button class="unapprove-all-btn" *ngIf="approvedCount > 0 && pendingCount === 0" (click)="unapproveAll()">
+                <mat-icon>remove_done</mat-icon> Undo All
+            </button>
+        </div>
+
+
+
+        <!-- Empty -->
+        <div class="empty-state" *ngIf="images.length === 0">
+            <mat-icon>image_not_supported</mat-icon>
+            <p>No images found for this vehicle.</p>
+        </div>
+
+        <!-- Grid -->
+        <div class="img-grid" *ngIf="images.length > 0">
+            <div class="img-card" *ngFor="let image of images; let i = index"
+                [class.approved]="getStatus(image.id) === 'approved'" [style.animation-delay]="(i * 50) + 'ms'"
+                (click)="openLightbox(image)">
+
+                <!-- Background image -->
+                <img class="card-bg-img" [src]="image.imageUrl" alt="Vehicle image" loading="lazy" />
+
+                <!-- Zoom hint -->
+                <div class="img-hover-overlay"><mat-icon>zoom_in</mat-icon></div>
+
+                <!-- Badge top-left -->
+                <div class="card-badge">
+                    <span class="badge b-approved" *ngIf="getStatus(image.id) === 'approved'">
+                        <mat-icon>check_circle</mat-icon> Approved
+                    </span>
+                    <span class="primary-tag" *ngIf="image.isPrimary">Primary</span>
+                </div>
+
+                <!-- Approve toggle bottom -->
+                <div class="card-btns" (click)="$event.stopPropagation()">
+                    <button class="c-btn c-toggle" [class.active]="getStatus(image.id) === 'approved'"
+                        (click)="toggleApprove(image.id)">
+                        <mat-icon>{{ getStatus(image.id) === 'approved' ? 'check_circle' : 'radio_button_unchecked'
+                            }}</mat-icon>
+                        <span>{{ getStatus(image.id) === 'approved' ? 'Approved' : 'Approve' }}</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="dlg-footer" *ngIf="images.length > 0">
+            <div class="footer-status" [class.ready]="pendingCount === 0">
+                <mat-icon>{{ pendingCount === 0 ? 'task_alt' : 'info_outline' }}</mat-icon>
+                <span *ngIf="pendingCount > 0">
+                    {{ pendingCount }} image{{ pendingCount !== 1 ? 's' : '' }} not yet reviewed
+                </span>
+                <span *ngIf="pendingCount === 0">All reviewed — ready to submit</span>
+            </div>
+            <div class="footer-btns">
+                <button mat-stroked-button class="btn-cancel" (click)="close()">Cancel</button>
+                <button mat-flat-button class="btn-submit" [disabled]="isSubmitting || approvedCount === 0"
+                    (click)="submit()">
+                    <mat-spinner diameter="16" *ngIf="isSubmitting"></mat-spinner>
+                    <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+                    {{ isSubmitting ? 'Submitting…' : 'Submit Review' }}
+                </button>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <!-- Loading template -->
+    <ng-template #loadingTpl>
+        <div class="loading-state">
+            <div class="spinner-ring"></div>
+            <p>Fetching images…</p>
+        </div>
+    </ng-template>
 
 </div>

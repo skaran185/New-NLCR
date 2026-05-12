@@ -9,10 +9,6 @@ $green:      #10b981;
 $green-bg:   rgba(16,185,129,.10);
 $green-bd:   rgba(16,185,129,.28);
 
-$red:        #f43f5e;
-$red-bg:     rgba(244,63,94,.10);
-$red-bd:     rgba(244,63,94,.28);
-
 $amber:      #f59e0b;
 $amber-bg:   rgba(245,158,11,.10);
 
@@ -71,12 +67,9 @@ $ease:       0.18s ease;
   transition: all $ease; font-family: inherit;
 
   &.lb-approve {
-    color: $green; background: $green-bg; border-color: $green-bd;
-    &.active, &:hover { background: $green; color: #fff; border-color: $green; }
-  }
-  &.lb-reject {
-    color: $red; background: $red-bg; border-color: $red-bd;
-    &.active, &:hover { background: $red; color: #fff; border-color: $red; }
+    color: $t2; background: rgba(255,255,255,.04); border-color: $border;
+    &:hover { color: $t1; background: rgba(255,255,255,.08); border-color: $border-lt; }
+    &.active { background: $green; color: #fff; border-color: $green; }
   }
 }
 
@@ -84,7 +77,8 @@ $ease:       0.18s ease;
 .dlg {
   display: flex; flex-direction: column;
   background: $bg; width: 100%; max-width: 940px;
-  max-height: 90vh; overflow: hidden;
+  height: 90vh; max-height: 90vh;
+  overflow: hidden;
   border-radius: 16px;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   color: $t1;
@@ -131,8 +125,7 @@ $ease:       0.18s ease;
   .s-l { color: $t2; font-weight: 500; }
 
   &.s-approved { color: $green; background: $green-bg; border-color: $green-bd; }
-  &.s-rejected { color: $red;   background: $red-bg;   border-color: $red-bd; }
-  &.s-pending  { color: $amber; background: $amber-bg; }
+  &.s-pending  { color: $amber; background: $amber-bg; border-color: rgba(245,158,11,.28); }
 }
 
 .approve-all-btn {
@@ -144,6 +137,16 @@ $ease:       0.18s ease;
   &:hover { background: $green; color: #fff; }
 }
 
+.unapprove-all-btn {
+  margin-left: auto; display: flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.05); color: $t2;
+  border: 1px solid $border;
+  border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: all $ease;
+  mat-icon { font-size: 15px; width: 15px; height: 15px; }
+  &:hover { background: rgba(255,255,255,.10); color: $t1; border-color: $border-lt; }
+}
+
 // ── Loading / empty ───────────────────────────────────────────────
 .loading-state {
   display: flex; flex-direction: column; align-items: center;
@@ -152,7 +155,6 @@ $ease:       0.18s ease;
   p { margin: 0; font-size: 14px; }
 }
 
-// Pure CSS spinner (avoids mat-spinner change detection issues)
 .spinner-ring {
   width: 44px; height: 44px; border-radius: 50%;
   border: 3px solid $border-lt;
@@ -172,42 +174,86 @@ $ease:       0.18s ease;
 .img-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 14px; padding: 18px 22px;
-  overflow-y: auto; flex: 1;
+  grid-auto-rows: 158px;  // ← explicit row height instead of relying on aspect-ratio
+  gap: 14px;
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  align-content: start;
 
   &::-webkit-scrollbar { width: 5px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: $border-lt; border-radius: 3px; }
 }
 
-// ── Image card ────────────────────────────────────────────────────
+// ── Image card — full background ──────────────────────────────────
 .img-card {
-  background: $bg-card;
-  border: 1px solid $border;
+   border: 1px solid $border;
   border-radius: $r; overflow: hidden;
   display: flex; flex-direction: column;
   transition: border-color $ease, transform $ease, box-shadow $ease;
   animation: slideUp .22s ease both;
+  position: relative;
+  // remove aspect-ratio — height is now controlled by grid-auto-rows
+  background: #07090e;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;   // ← fill the grid row
+
+  img.card-bg-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform .35s ease;
+    z-index: 0;
+  }
+
+  &::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,.50) 0%,
+      rgba(0,0,0,.02) 45%,
+      rgba(0,0,0,.65) 100%
+    );
+    transition: background $ease;
+  }
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    box-shadow: 0 12px 32px rgba(0,0,0,.55);
     border-color: $border-lt;
+    img.card-bg-img { transform: scale(1.06); }
+    &::after {
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.60) 0%,
+        rgba(0,0,0,.05) 45%,
+        rgba(0,0,0,.75) 100%
+      );
+    }
   }
 
   &.approved {
     border-color: $green-bd;
-    background: linear-gradient(170deg, rgba(16,185,129,.07) 0%, $bg-card 55%);
-  }
-  &.rejected {
-    border-color: $red-bd;
-    background: linear-gradient(170deg, rgba(244,63,94,.07) 0%, $bg-card 55%);
+    border-width: 2px;
+    &::after {
+      background: linear-gradient(
+        to bottom,
+        rgba(16,185,129,.4) 0%,
+        rgba(0,0,0,.02) 45%,
+        rgba(0,0,0,.68) 100%
+      );
+    }
   }
 }
 
+// ── Card badge (top-left over image) ─────────────────────────────
 .card-badge {
+  position: absolute; top: 8px; left: 8px; right: 8px;
   display: flex; align-items: center; gap: 6px;
-  padding: 8px 10px 0; min-height: 30px;
+  z-index: 2;
 }
 
 .badge {
@@ -216,70 +262,58 @@ $ease:       0.18s ease;
   text-transform: uppercase; padding: 2px 9px; border-radius: 100px;
   mat-icon { font-size: 12px; width: 12px; height: 12px; }
 
-  &.b-approved { color: $green; background: $green-bg; border: 1px solid $green-bd; }
-  &.b-rejected { color: $red;   background: $red-bg;   border: 1px solid $red-bd; }
-  &.b-pending  { color: $amber; background: $amber-bg; }
+  &.b-approved {
+    color: #fff; background: $green; border: 1px solid $green;
+  }
 }
 
 .primary-tag {
   margin-left: auto; font-size: 10px; font-weight: 700;
-  color: $blue; background: rgba(59,130,246,.12);
-  border: 1px solid rgba(59,130,246,.25);
+  color: #fff; background: rgba(59,130,246,.7);
+  border: 1px solid rgba(59,130,246,.5);
   padding: 2px 8px; border-radius: 100px; letter-spacing: .4px;
   text-transform: uppercase;
+  backdrop-filter: blur(4px);
 }
 
-.card-img {
-  position: relative; aspect-ratio: 4/3;
-  margin: 8px 10px; border-radius: 7px;
-  overflow: hidden; cursor: zoom-in; background: #07090e;
-
-  img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block; transition: transform .3s ease;
-  }
-
-  .img-hover-overlay {
-    position: absolute; inset: 0; background: rgba(0,0,0,0);
-    display: flex; align-items: center; justify-content: center;
-    transition: background $ease;
-    mat-icon {
-      color: #fff; font-size: 30px; width: 30px; height: 30px;
-      opacity: 0; transition: opacity $ease;
-    }
-  }
-
-  &:hover {
-    img { transform: scale(1.06); }
-    .img-hover-overlay { background: rgba(0,0,0,.42); }
-    .img-hover-overlay mat-icon { opacity: 1; }
+// ── Zoom hint ─────────────────────────────────────────────────────
+.img-hover-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  mat-icon {
+    color: #fff; font-size: 32px; width: 32px; height: 32px;
+    opacity: 0; transition: opacity $ease;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
   }
 }
+.img-card:hover .img-hover-overlay mat-icon { opacity: 1; }
 
+// ── Card approve button (bottom of card) ──────────────────────────
 .card-btns {
-  display: flex; align-items: center; gap: 5px;
-  padding: 8px 10px 12px;
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center;
+  padding: 8px 8px 10px;
+  z-index: 3;
 }
 
 .c-btn {
   display: flex; align-items: center; justify-content: center;
   gap: 4px; border: 1px solid; border-radius: 7px;
   font-size: 11px; font-weight: 700; cursor: pointer;
-  padding: 6px 10px; font-family: inherit; transition: all $ease;
+  padding: 7px 10px; font-family: inherit; transition: all $ease;
   mat-icon { font-size: 14px; width: 14px; height: 14px; }
 
-  &.c-approve {
-    flex: 1; color: $green; background: $green-bg; border-color: $green-bd;
-    &:hover, &.active { background: $green; color: #fff; border-color: $green; }
-  }
-  &.c-reject {
-    flex: 1; color: $red; background: $red-bg; border-color: $red-bd;
-    &:hover, &.active { background: $red; color: #fff; border-color: $red; }
-  }
-  &.c-reset {
-    flex-shrink: 0; padding: 6px 7px;
-    color: $t3; background: rgba(255,255,255,.04); border-color: $border;
-    &:hover { color: $t1; border-color: $border-lt; }
+  &.c-toggle {
+    flex: 1;
+    color: #fff;
+    background: rgba(0,0,0,.45);
+    border-color: rgba(255,255,255,.2);
+    backdrop-filter: blur(8px);
+    &:hover { background: rgba(0,0,0,.6); border-color: rgba(255,255,255,.35); }
+    &.active {
+      background: $green; border-color: $green;
+    }
   }
 }
 
@@ -321,9 +355,11 @@ $ease:       0.18s ease;
 
 // ── Responsive ────────────────────────────────────────────────────
 @media (max-width: 720px) {
+  .dlg { height: 100vh; max-height: 100vh; border-radius: 0; }
   .img-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); padding: 14px 16px; }
   .stats-row { padding: 10px 16px; }
-  .approve-all-btn { margin-left: 0; width: 100%; justify-content: center; }
+  .approve-all-btn,
+  .unapprove-all-btn { margin-left: 0; width: 100%; justify-content: center; }
   .dlg-footer { flex-direction: column; align-items: stretch; }
   .footer-btns { margin-left: 0; }
   .btn-cancel, .btn-submit { flex: 1; }
@@ -331,7 +367,6 @@ $ease:       0.18s ease;
 
 @media (max-width: 440px) {
   .img-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px; }
-  .c-btn span { display: none; }
   .dlg-header { padding: 14px 14px 12px; }
 }
 
@@ -340,15 +375,7 @@ $ease:       0.18s ease;
 @keyframes slideUp { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
 @keyframes spin    { to { transform: rotate(360deg) } }
 
-.cdk-overlay-pane .mat-mdc-dialog-container,
-.cdk-overlay-pane .mdc-dialog__surface {
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  border-radius: 16px !important;
-  overflow: hidden !important;
-}
-
+// ── Material dialog overrides ─────────────────────────────────────
 .cdk-overlay-pane .mat-mdc-dialog-container,
 .cdk-overlay-pane .mdc-dialog__surface {
   background: transparent !important;

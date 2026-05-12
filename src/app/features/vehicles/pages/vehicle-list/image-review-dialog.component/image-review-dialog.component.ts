@@ -29,7 +29,6 @@ export class ImageReviewDialogComponent implements OnInit {
   images$!: Observable<VehicleImage[]>;
 
   approvedIds = new Set<string>();
-  rejectedIds = new Set<string>();
   lightboxImage: VehicleImage | null = null;
   isSubmitting = false;
   hasError = false;
@@ -38,7 +37,6 @@ export class ImageReviewDialogComponent implements OnInit {
 
   get vehicleId(): string { return this.data.vehicleId; }
   get approvedCount(): number { return this.approvedIds.size; }
-  get rejectedCount(): number { return this.rejectedIds.size; }
   get totalCount(): number { return this.imagesSnapshot.length; }
   get pendingCount(): number {
     return this.imagesSnapshot.filter(img => this.getStatus(img.id) === 'pending').length;
@@ -51,52 +49,63 @@ export class ImageReviewDialogComponent implements OnInit {
     private vehicleService: AdminVehicleService,
     private dialogRef: MatDialogRef<ImageReviewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ImageReviewDialogData
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadImages();
   }
 
   loadImages(): void {
-    this.hasError = false;
-    this.images$ = this.vehicleService.getVehicleImages(this.vehicleId).pipe(
-      map((response: any) => response?.data ?? response ?? []),
-      tap((images: VehicleImage[]) => {
-        this.imagesSnapshot = images;
-        this.approvedIds = new Set(images.filter(i => i.isApproved === true).map(i => i.id));
-        this.rejectedIds = new Set(images.filter(i => i.isApproved === false).map(i => i.id));
-      })
-    );
+  this.hasError = false;
+
+  this.images$ = this.vehicleService.getVehicleImages(this.vehicleId).pipe(
+    map((response: any) => {
+      const images = response?.data ?? response ?? [];
+
+      // Duplicate images for UI testing
+      const duplicatedImages = [
+        ...images,
+        ...images.map((img: VehicleImage, index: number) => ({
+          ...img,
+          id: img.id + 100000 + index // unique fake id
+        })),
+        ...images.map((img: VehicleImage, index: number) => ({
+          ...img,
+          id: img.id + 200000 + index // another duplicate set
+        }))
+      ];
+
+      return duplicatedImages;
+    }),
+
+    tap((images: VehicleImage[]) => {
+      this.imagesSnapshot = images;
+
+      // Pre-populate approved set from existing DB values
+      this.approvedIds = new Set(
+        images
+          .filter(i => i.isApproved === true)
+          .map(i => i.id)
+      );
+    })
+  );
+}
+
+  getStatus(id: string): 'approved' | 'pending' {
+    return this.approvedIds.has(id) ? 'approved' : 'pending';
   }
 
-  getStatus(id: string): 'approved' | 'rejected' | 'pending' {
-    if (this.approvedIds.has(id)) return 'approved';
-    if (this.rejectedIds.has(id)) return 'rejected';
-    return 'pending';
-  }
-
-  approve(id: string): void {
-    this.approvedIds = new Set([...this.approvedIds, id]);
-    this.rejectedIds.delete(id);
-    this.rejectedIds = new Set(this.rejectedIds);
-  }
-
-  reject(id: string): void {
-    this.rejectedIds = new Set([...this.rejectedIds, id]);
-    this.approvedIds.delete(id);
-    this.approvedIds = new Set(this.approvedIds);
-  }
-
-  reset(id: string): void {
-    this.approvedIds.delete(id);
-    this.rejectedIds.delete(id);
-    this.approvedIds = new Set(this.approvedIds);
-    this.rejectedIds = new Set(this.rejectedIds);
+  toggleApprove(id: string): void {
+    if (this.approvedIds.has(id)) {
+      this.approvedIds.delete(id);
+    } else {
+      this.approvedIds.add(id);
+    }
+    this.approvedIds = new Set(this.approvedIds); // trigger change detection
   }
 
   approveAll(): void {
     this.approvedIds = new Set(this.imagesSnapshot.map(i => i.id));
-    this.rejectedIds = new Set();
   }
 
   openLightbox(image: VehicleImage): void { this.lightboxImage = image; }
@@ -107,10 +116,10 @@ export class ImageReviewDialogComponent implements OnInit {
     if (this.isSubmitting) return;
     this.isSubmitting = true;
 
-    const payload = {
-      approvedImageIds: Array.from(this.approvedIds),
-      rejectedImageIds: Array.from(this.rejectedIds),
-    };
+    const payload = this.imagesSnapshot.map(img => ({
+      id: img.id,
+      isApproved: this.approvedIds.has(img.id),
+    }));
 
     this.vehicleService.reviewVehicleImages(this.vehicleId, payload).subscribe({
       next: () => {
@@ -119,5 +128,8 @@ export class ImageReviewDialogComponent implements OnInit {
       },
       error: () => { this.isSubmitting = false; }
     });
+  }
+  unapproveAll(): void {
+    this.approvedIds = new Set();
   }
 }
