@@ -92,10 +92,10 @@ export class ImageReviewDialogComponent implements OnInit {
     if (this.isSubmitting) return;
     this.isSubmitting = true;
 
-    const payload = this.imagesSnapshot.map(img => ({
-      id: img.id,
-      isApproved: this.approvedIds.has(img.id),
-    }));
+    const payload = {
+      approvedImageIds: [...new Set(Array.from(this.approvedIds))],
+      rejectedImageIds: [],
+    };
 
     this.vehicleService.reviewVehicleImages(this.vehicleId, payload).subscribe({
       next: () => {
