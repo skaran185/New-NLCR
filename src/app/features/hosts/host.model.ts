@@ -88,6 +88,13 @@ export interface LookupItem {
   name: string;
 }
 
+export interface HostStats {
+  total:    number;
+  approved: number;
+  pending:  number;
+  rejected: number;
+}
+
 // host.model.ts — add this interface
 export interface LookupResponse {
   success: boolean;

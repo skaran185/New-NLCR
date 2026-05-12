@@ -1,9 +1,7 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Host, HostsFilter, Pagination } from '../../host.model';
+import { Host, HostsFilter, HostStats, Pagination } from '../../host.model';
 import { HostsService } from '../../services/hosts';
 import { HostViewDialogComponent } from './host-view-dialog/host-view-dialog';
 import { HostApproveDialogComponent } from './host-approve-dialog/host-approve-dialog';
@@ -20,6 +18,14 @@ export class HostsListComponent implements OnInit {
   pagination!: Pagination;
   loading = false;
 
+  // ── Stats ──────────────────────────────────────────────────────────────────
+  stats: HostStats = {
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+  };
+
   searchTerm = '';
   private searchSubject = new Subject<string>();
 
@@ -34,10 +40,12 @@ export class HostsListComponent implements OnInit {
   };
 
   approvalOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
-  idProofOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
+  // idProofOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
   sortOptions = [
     { value: 'NEWEST', label: 'Newest' },
     { value: 'OLDEST', label: 'Oldest' },
+    { value: 'PENDING_FIRST', label: 'Pending first' },
+    { value: 'RECENTLY_APPROVED', label: 'Recently approved' },
   ];
 
   constructor(
@@ -66,8 +74,9 @@ export class HostsListComponent implements OnInit {
   load() {
     this.loading = true;
     this.svc.getHosts(this.filter).subscribe({
-      next: res => {
-        this.hosts = res.data;
+      next: (res: any) => {
+        this.hosts = res.data.data;        // was: res.data
+        this.stats = res.data.stats;       // new
         this.pagination = res.pagination;
         this.loading = false;
       },
@@ -89,33 +98,58 @@ export class HostsListComponent implements OnInit {
     this.load();
   }
 
+  // ── Badge helpers (used by [ngClass] in template) ──────────────────────────
+  getApprovalClass(status: string): string {
+    const map: Record<string, string> = {
+      APPROVED: 'badge-approved',
+      PENDING: 'badge-pending',
+      REJECTED: 'badge-rejected',
+    };
+    return map[status] ?? 'badge-pending';
+  }
+
+  getIdProofClass(status: string): string {
+    const map: Record<string, string> = {
+      APPROVED: 'badge-verified',
+      PENDING: 'badge-review',
+      REJECTED: 'badge-rejected',
+    };
+    return map[status] ?? 'badge-unverified';
+  }
+
+  // ── Dialog helpers ─────────────────────────────────────────────────────────
   openView(host: Host) {
     const isMobile = window.innerWidth < 768;
-
     this.dialog.open(HostViewDialogComponent, {
       width: isMobile ? '100vw' : '720px',
       height: isMobile ? '100vh' : undefined,
       maxWidth: '95vw',
       panelClass: isMobile ? 'fullscreen-dialog' : 'host-view-dialog',
-      ...(isMobile && {
-        position: { top: '0' }
-      }),
-      data: host
+      ...(isMobile && { position: { top: '0' } }),
+      data: host,
     });
   }
-onImgError(event: any) {
-  event.target.style.display = 'none';
-}
+
   openAction(host: Host) {
     this.dialog.open(HostApproveDialogComponent, {
       width: '420px',
       data: { host },
-      panelClass: 'nexo-dialog'
+      panelClass: 'nexo-dialog',
     }).afterClosed().subscribe(updated => {
       if (updated) {
         this.toastr.success('Status updated successfully');
         this.load();
       }
     });
+  }
+
+  onImgError(event: any) {
+    event.target.style.display = 'none';
+  }
+
+  getCountByApproval(status: string): number {
+    return this.hosts.filter(
+      (host: any) => host.approvalStatus === status
+    ).length;
   }
 }
