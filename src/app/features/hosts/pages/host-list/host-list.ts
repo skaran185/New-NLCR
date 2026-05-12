@@ -40,7 +40,7 @@ export class HostsListComponent implements OnInit {
   };
 
   approvalOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
-  // idProofOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
+  idProofOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
   sortOptions = [
     { value: 'NEWEST', label: 'Newest' },
     { value: 'OLDEST', label: 'Oldest' },

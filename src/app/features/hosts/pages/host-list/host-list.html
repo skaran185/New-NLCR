@@ -65,20 +65,20 @@
         </mat-form-field>
 
         <!-- ID Proof filter -->
-        <!-- <mat-form-field appearance="outline" class="filter-select">
+        <mat-form-field appearance="outline" class="filter-select">
           <mat-label>ID Proof</mat-label>
           <mat-select [(ngModel)]="filter.idProofStatus" (selectionChange)="onFilterChange()">
             <mat-option *ngFor="let o of idProofOptions" [value]="o">{{ o }}</mat-option>
           </mat-select>
-        </mat-form-field> -->
+        </mat-form-field>
 
         <!-- Sort -->
-        <mat-form-field appearance="outline" class="filter-select">
+        <!-- <mat-form-field appearance="outline" class="filter-select">
           <mat-label>Sort</mat-label>
           <mat-select [(ngModel)]="filter.sortBy" (selectionChange)="onFilterChange()">
             <mat-option *ngFor="let o of sortOptions" [value]="o.value">{{ o.label }}</mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
 
       </div>
     </mat-card-content>
@@ -105,16 +105,16 @@
           <td mat-cell *matCellDef="let h">
             <div class="host-cell">
               <div class="avatar" *ngIf="!h.profileImageUrl">
-                <span>{{ h.fullName?.charAt(0)?.toUpperCase() }}</span>
+                <span>{{ h.firstName?.charAt(0)?.toUpperCase() }}</span>
               </div>
               <img *ngIf="h.profileImageUrl"
                    [src]="h.profileImageUrl"
                    class="avatar-img"
-                   [alt]="h.fullName"
+                   [alt]="h.firstName"
                    (error)="onImgError($event)" />
               <div>
-                <p class="host-name">{{ h.fullName }}</p>
-                <p class="host-sub">{{ h.businessEmail || '—' }}</p>
+                <p class="host-name">{{ h.firstName }} {{ h.lastName }}</p>
+                <p class="host-sub">{{ h.email || '—' }}</p>
               </div>
             </div>
           </td>
@@ -139,14 +139,14 @@
         </ng-container>
 
         <!-- ID Proof column -->
-        <!-- <ng-container matColumnDef="idProofStatus">
+        <ng-container matColumnDef="idProofStatus">
           <th mat-header-cell *matHeaderCellDef>ID Proof</th>
           <td mat-cell *matCellDef="let h">
             <span class="status-badge" [ngClass]="getIdProofClass(h.idProofStatus)">
               <span class="dot"></span>{{ h.idProofStatus }}
             </span>
           </td>
-        </ng-container> -->
+        </ng-container>
 
         <!-- Profile completion column -->
         <ng-container matColumnDef="completion">
