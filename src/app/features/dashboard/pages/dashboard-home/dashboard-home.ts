@@ -31,7 +31,8 @@ export class DashboardHome {
             label: 'Total Users',
             value: data.totalUsers,
             icon: 'people',
-            color: '#6366f1'
+            color: '#6366f1',
+            route: '/users'
           },
           {
             label: 'Total Hosts',
@@ -51,7 +52,7 @@ export class DashboardHome {
             value: data.totalVehicles,
             icon: 'directions_car',
             color: '#10b981',
-            // route: '/vehicles'
+            route: '/vehicles'
           },
           {
             label: 'Active Listings',

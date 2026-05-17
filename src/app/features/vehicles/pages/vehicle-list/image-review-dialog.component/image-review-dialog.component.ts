@@ -90,11 +90,18 @@ export class ImageReviewDialogComponent implements OnInit {
 
   submit(): void {
     if (this.isSubmitting) return;
+
     this.isSubmitting = true;
 
+    const approvedImageIds = [...new Set(Array.from(this.approvedIds))];
+
+    const rejectedImageIds = this.imagesSnapshot
+      .filter(img => !this.approvedIds.has(img.id))
+      .map(img => img.id);
+
     const payload = {
-      approvedImageIds: [...new Set(Array.from(this.approvedIds))],
-      rejectedImageIds: [],
+      approvedImageIds,
+      rejectedImageIds
     };
 
     this.vehicleService.reviewVehicleImages(this.vehicleId, payload).subscribe({
@@ -102,7 +109,9 @@ export class ImageReviewDialogComponent implements OnInit {
         this.isSubmitting = false;
         this.dialogRef.close({ success: true, payload });
       },
-      error: () => { this.isSubmitting = false; }
+      error: () => {
+        this.isSubmitting = false;
+      }
     });
   }
   unapproveAll(): void {

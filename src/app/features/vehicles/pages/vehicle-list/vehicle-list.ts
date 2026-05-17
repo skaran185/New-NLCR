@@ -217,13 +217,12 @@ export class VehicleList implements OnInit, OnDestroy {
   }
 
   openImageApproval(vehicle: AdminVehicleSummary): void {
-    debugger
     const dialogRef = this.dialog.open(ImageReviewDialogComponent, {
       width: '960px',
       maxWidth: '95vw',
       height: 'auto',       // ← add this
       maxHeight: '90vh',
-  panelClass: 'clean-dialog',  // ← add this
+      panelClass: 'clean-dialog',  // ← add this
       data: {
         vehicleId: vehicle.id,
         vehicleName: vehicle.licensePlate // optional
@@ -234,6 +233,7 @@ export class VehicleList implements OnInit, OnDestroy {
       if (result?.success) {
         console.log('Review submitted:', result.payload);
         // refresh your table/list here
+        this.loadVehicles();
       }
     });
     console.log('Open image approval for', vehicle.id);
